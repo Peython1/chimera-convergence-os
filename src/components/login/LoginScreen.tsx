@@ -5,22 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChimeraLogo } from '../shared/ChimeraLogo';
 import { Clock } from '../shared/Clock';
+import { toast } from "sonner";
 
-const LoginScreen: React.FC = () => {
+interface LoginScreenProps {
+  onLogin: () => void;
+}
+
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!username || !password) {
+      toast.error("Login failed", {
+        description: "Username and password are required"
+      });
+      return;
+    }
+    
     setIsLoggingIn(true);
     
     // Simulate login process
     setTimeout(() => {
       setIsLoggingIn(false);
-      if (username && password) {
-        window.location.href = '/desktop';
-      }
+      onLogin();
     }, 1500);
   };
 
