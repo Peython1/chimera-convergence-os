@@ -12,6 +12,7 @@ interface WindowProps {
   onMaximize: () => void;
   onPositionChange: (position: { x: number; y: number }) => void;
   onSizeChange: (size: { width: number; height: number }) => void;
+  content?: React.ReactNode; // Adding content as an optional prop
 }
 
 const Window: React.FC<WindowProps> = ({
@@ -88,9 +89,10 @@ const Window: React.FC<WindowProps> = ({
         className={`h-10 flex items-center justify-between px-3 ${
           data.isActive ? 'bg-white' : 'bg-gray-100'
         }`}
-        onMouseDown={(e) => {
+        onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
           if (e.button === 0 && !data.isMaximized) {
-            dragControls.start(e);
+            // Fix type issue by using the correct event type
+            dragControls.start(e as unknown as React.PointerEvent<Element>);
           }
         }}
       >

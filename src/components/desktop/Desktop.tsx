@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DesktopIcon } from './DesktopIcon';
 import Taskbar from './Taskbar';
@@ -22,6 +21,9 @@ export interface WindowData {
   position: { x: number; y: number };
   size: { width: number; height: number };
   isMinimized: boolean;
+  isMaximized: boolean;
+  isActive: boolean;
+  icon: React.ReactNode;
 }
 
 const generateWindowId = () => `window-${Math.random().toString(36).substr(2, 9)}`;
@@ -60,7 +62,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 100 + windowOffset, y: 100 + windowOffset },
           size: { width: 600, height: 400 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <Terminal size={16} />
         };
       
       case 'fileexplorer':
@@ -92,7 +97,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 150 + windowOffset, y: 120 + windowOffset },
           size: { width: 700, height: 500 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <Folder size={16} />
         };
       
       case 'settings':
@@ -124,7 +132,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 200 + windowOffset, y: 140 + windowOffset },
           size: { width: 650, height: 450 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <Settings size={16} />
         };
       
       case 'store':
@@ -162,7 +173,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 250 + windowOffset, y: 160 + windowOffset },
           size: { width: 720, height: 480 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <Store size={16} />
         };
       
       case 'systemmonitor':
@@ -229,7 +243,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 300 + windowOffset, y: 180 + windowOffset },
           size: { width: 650, height: 450 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <MonitorPlay size={16} />
         };
         
       case 'browser':
@@ -257,7 +274,10 @@ const Desktop: React.FC = () => {
           ),
           position: { x: 350 + windowOffset, y: 200 + windowOffset },
           size: { width: 800, height: 600 },
-          isMinimized: false
+          isMinimized: false,
+          isMaximized: false,
+          isActive: true,
+          icon: <FileText size={16} />
         };
       
       default:
@@ -288,6 +308,15 @@ const Desktop: React.FC = () => {
     }
   };
 
+  // Toggle maximize window
+  const toggleMaximize = (id: string) => {
+    setWindows(windows.map(window => 
+      window.id === id 
+        ? { ...window, isMaximized: !window.isMaximized }
+        : window
+    ));
+  };
+
   // Update window position
   const updateWindowPosition = (id: string, position: { x: number, y: number }) => {
     setWindows(windows.map(window => 
@@ -309,6 +338,12 @@ const Desktop: React.FC = () => {
   // Set active window
   const setActiveWindow = (id: string) => {
     setActiveWindowId(id);
+    
+    // Update the isActive state for all windows
+    setWindows(windows.map(window => ({
+      ...window,
+      isActive: window.id === id
+    })));
   };
 
   return (
@@ -324,7 +359,7 @@ const Desktop: React.FC = () => {
           <DesktopIcon
             icon={<Folder size={28} className="text-white" />}
             label="File Explorer"
-            onClick={() => createWindow('fileExplorer')}
+            onClick={() => createWindow('fileexplorer')}
           />
           <DesktopIcon
             icon={<Settings size={28} className="text-white" />}
@@ -339,7 +374,7 @@ const Desktop: React.FC = () => {
           <DesktopIcon
             icon={<MonitorPlay size={28} className="text-white" />}
             label="System Monitor"
-            onClick={() => createWindow('systemMonitor')}
+            onClick={() => createWindow('systemmonitor')}
           />
         </div>
         
@@ -347,19 +382,13 @@ const Desktop: React.FC = () => {
         {windows.map(window => !window.isMinimized && (
           <Window
             key={window.id}
-            id={window.id}
-            title={window.title}
-            position={window.position}
-            size={window.size}
-            isActive={activeWindowId === window.id}
+            data={window}
             onClose={() => closeWindow(window.id)}
-            onMinimize={() => toggleMinimize(window.id)}
+            onMaximize={() => toggleMaximize(window.id)}
             onPositionChange={(newPos) => updateWindowPosition(window.id, newPos)}
             onSizeChange={(newSize) => updateWindowSize(window.id, newSize)}
             onActivate={() => setActiveWindow(window.id)}
-          >
-            {window.content}
-          </Window>
+          />
         ))}
       </div>
       
@@ -382,7 +411,6 @@ const Desktop: React.FC = () => {
       
       {/* Sidebar */}
       <Sidebar 
-        isOpen={showSidebar} 
         onClose={() => setShowSidebar(false)} 
       />
     </div>
