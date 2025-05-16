@@ -1,14 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import LoginScreen from "@/components/login/LoginScreen";
+import { useState, useEffect } from "react";
+import Desktop from "@/components/desktop/Desktop";
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Simulate automatic login after 2 seconds for demonstration purposes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoggedIn(true);
+    }, 3000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isLoggedIn) {
+    return <LoginScreen />;
+  }
+
+  return <Desktop />;
 };
 
 export default Index;
