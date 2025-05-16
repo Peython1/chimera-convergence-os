@@ -6,11 +6,11 @@ import { X, Bell, Calendar, Wifi, Moon, Sun, Volume2 } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 
 interface SidebarProps {
-  isOpen?: boolean; // Add isOpen as an optional prop
+  isOpen: boolean;
   onClose: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   return (
     <motion.div
       className="absolute right-0 top-0 bottom-0 w-80 bg-white shadow-lg border-l z-50"

@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion, useDragControls } from 'framer-motion';
-import { WindowData } from './Desktop';
+import { WindowData } from './types';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -12,7 +11,6 @@ interface WindowProps {
   onMaximize: () => void;
   onPositionChange: (position: { x: number; y: number }) => void;
   onSizeChange: (size: { width: number; height: number }) => void;
-  content?: React.ReactNode; // Adding content as an optional prop
 }
 
 const Window: React.FC<WindowProps> = ({
