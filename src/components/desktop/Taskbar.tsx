@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { WindowData } from './Desktop';
+import { WindowData } from './types';
 import { 
   ChevronUp, 
   Bell, 
