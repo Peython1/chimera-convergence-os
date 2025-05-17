@@ -1,3 +1,4 @@
+
 import React from 'react';
 // Use the standard import which should work with our alias
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +11,7 @@ import {
   Wifi
 } from 'lucide-react';
 import WifiManager from '../wifi/WifiManager';
+import { WindowData } from './types';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   // Check for existing window of this type
