@@ -1,7 +1,6 @@
-
 import React from 'react';
+// Use the standard import which should work with our alias
 import { v4 as uuidv4 } from 'uuid';
-import { WindowData } from './types';
 import { 
   FolderOpen, 
   Terminal as TerminalIcon, 
