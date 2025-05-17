@@ -5,7 +5,6 @@ import { WindowData } from './types';
 import { 
   ChevronUp, 
   Bell, 
-  Wifi, 
   Volume2,
   LayoutGrid,
   Monitor,
@@ -13,11 +12,13 @@ import {
   Settings,
   Folder,
   Store,
-  Search
+  Search,
+  Wifi
 } from 'lucide-react';
 import { Clock } from '../shared/Clock';
 import { ChimeraLogo } from '../shared/ChimeraLogo';
 import { Button } from '@/components/ui/button';
+import WifiStatusIndicator from '../wifi/WifiStatusIndicator';
 
 interface TaskbarProps {
   windows: WindowData[];
@@ -71,7 +72,8 @@ const Taskbar: React.FC<TaskbarProps> = ({
           { icon: <Monitor size={18} />, type: 'fileExplorer' },
           { icon: <Terminal size={18} />, type: 'terminal' },
           { icon: <Store size={18} />, type: 'store' },
-          { icon: <Settings size={18} />, type: 'settings' }
+          { icon: <Settings size={18} />, type: 'settings' },
+          { icon: <Wifi size={18} />, type: 'wifiManager' }
         ].map((app, index) => (
           <Button
             key={index}
@@ -108,9 +110,16 @@ const Taskbar: React.FC<TaskbarProps> = ({
           <Bell size={18} />
         </Button>
         
-        <div className="flex items-center px-2 py-1 rounded-md hover:bg-gray-200 cursor-pointer mx-1">
-          <Wifi size={16} className="text-gray-600" />
-        </div>
+        <WifiStatusIndicator 
+          onOpenWifiManager={() => {
+            const existingWindow = windows.find(window => window.title.toLowerCase().includes('wifi'));
+            if (existingWindow) {
+              onActivateWindow(existingWindow.id);
+            } else {
+              onCreateWindow('wifiManager');
+            }
+          }} 
+        />
         
         <div className="flex items-center px-2 py-1 rounded-md hover:bg-gray-200 cursor-pointer mx-1">
           <Volume2 size={16} className="text-gray-600" />
