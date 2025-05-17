@@ -18,8 +18,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Add UUID alias to ensure consistent resolution
-      "uuid": path.resolve(__dirname, "node_modules/uuid")
+      // Configure explicit path for uuid to ensure consistent resolution
+      "uuid": path.resolve(__dirname, "node_modules/uuid/dist/esm-browser/index.js")
     },
+  },
+  optimizeDeps: {
+    include: ['uuid'] // Force pre-bundling of uuid
   },
 }));
