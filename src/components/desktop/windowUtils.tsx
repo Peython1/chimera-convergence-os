@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { getUuid } from '../../utils/uuidHelper';
 import { 
   FolderOpen, 
   Terminal as TerminalIcon, 
@@ -32,7 +32,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
   
   // Default window properties
   const defaultProps = {
-    id: uuidv4(),
+    id: getUuid(),
     position: { x: 100 + offsetX, y: 100 + offsetY },
     size: { width: 800, height: 600 },
     isMinimized: false,
