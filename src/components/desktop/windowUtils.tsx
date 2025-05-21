@@ -1,14 +1,17 @@
+
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   FolderOpen, 
   Terminal as TerminalIcon, 
   Code, 
-  MonitorSmartphone, 
+  Monitor, 
   Settings as SettingsIcon,
   Wifi
 } from 'lucide-react';
 import WifiManager from '../wifi/WifiManager';
+import SystemMonitor from '../system/SystemMonitor';
+import Terminal from '../system/Terminal';
 import { WindowData } from './types';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
@@ -57,11 +60,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
         ...defaultProps,
         title: 'Terminal',
         icon: <TerminalIcon size={16} />,
-        content: (
-          <div className="bg-black text-green-400 h-full p-2 font-mono overflow-auto">
-            <div>chimera@os:~$ _</div>
-          </div>
-        )
+        content: <Terminal />
       };
       
     case 'store':
@@ -81,13 +80,8 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
       return {
         ...defaultProps,
         title: 'System Monitor',
-        icon: <MonitorSmartphone size={16} />,
-        content: (
-          <div className="p-4">
-            <h2 className="text-xl font-bold">System Monitor</h2>
-            <p className="mt-2">View system performance and resources.</p>
-          </div>
-        )
+        icon: <Monitor size={16} />,
+        content: <SystemMonitor />
       };
       
     case 'settings':

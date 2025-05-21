@@ -28,6 +28,7 @@ interface TaskbarProps {
   showStartMenu: boolean;
   onToggleStartMenu: () => void;
   onToggleSidebar: () => void;
+  onToggleSearch: () => void;
 }
 
 const Taskbar: React.FC<TaskbarProps> = ({
@@ -37,7 +38,8 @@ const Taskbar: React.FC<TaskbarProps> = ({
   onCreateWindow,
   showStartMenu,
   onToggleStartMenu,
-  onToggleSidebar
+  onToggleSidebar,
+  onToggleSearch
 }) => {
   return (
     <div className="h-14 bg-white border-t flex items-center px-4 z-50">
@@ -59,7 +61,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
           variant="ghost"
           size="sm"
           className="rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center px-3"
-          onClick={() => {}}
+          onClick={onToggleSearch}
         >
           <Search size={16} className="mr-1" />
           <span className="text-sm">Search</span>
@@ -69,9 +71,10 @@ const Taskbar: React.FC<TaskbarProps> = ({
       {/* Running apps */}
       <div className="ml-4 flex items-center space-x-1 flex-1">
         {[
-          { icon: <Monitor size={18} />, type: 'fileExplorer' },
+          { icon: <Folder size={18} />, type: 'fileExplorer' },
           { icon: <Terminal size={18} />, type: 'terminal' },
           { icon: <Store size={18} />, type: 'store' },
+          { icon: <Monitor size={18} />, type: 'systemMonitor' },
           { icon: <Settings size={18} />, type: 'settings' },
           { icon: <Wifi size={18} />, type: 'wifiManager' }
         ].map((app, index) => (
@@ -80,10 +83,12 @@ const Taskbar: React.FC<TaskbarProps> = ({
             variant="ghost"
             size="icon"
             className={`rounded-md hover:bg-gray-200 relative ${
-              windows.some(window => window.title.toLowerCase().includes(app.type)) ? 'bg-gray-100' : ''
+              windows.some(window => window.title.toLowerCase().includes(app.type.toLowerCase())) ? 'bg-gray-100' : ''
             }`}
             onClick={() => {
-              const existingWindow = windows.find(window => window.title.toLowerCase().includes(app.type));
+              const existingWindow = windows.find(window => 
+                window.title.toLowerCase().includes(app.type.toLowerCase())
+              );
               if (existingWindow) {
                 onActivateWindow(existingWindow.id);
               } else {
@@ -92,7 +97,7 @@ const Taskbar: React.FC<TaskbarProps> = ({
             }}
           >
             {app.icon}
-            {windows.some(window => window.title.toLowerCase().includes(app.type)) && (
+            {windows.some(window => window.title.toLowerCase().includes(app.type.toLowerCase())) && (
               <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
             )}
           </Button>
@@ -155,6 +160,11 @@ const Taskbar: React.FC<TaskbarProps> = ({
                     type="text"
                     placeholder="Type to search"
                     className="w-full pl-10 pr-4 py-2 bg-gray-100 border-none rounded-lg text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleStartMenu();
+                      onToggleSearch();
+                    }}
                   />
                   <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
                 </div>

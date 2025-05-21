@@ -4,8 +4,10 @@ import Taskbar from './Taskbar';
 import Sidebar from './Sidebar';
 import WindowManager from './WindowManager';
 import DesktopIcons from './DesktopIcons';
+import UniversalSearch from './UniversalSearch';
 import { WindowData } from './types';
 import { generateWindow } from './windowUtils';
+import { SearchResult } from '../../services/universalSearch';
 
 const Desktop: React.FC = () => {
   // State for windows, active window, start menu and sidebar
@@ -13,6 +15,7 @@ const Desktop: React.FC = () => {
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   // Create new window function
   const createWindow = (windowType: string) => {
@@ -85,6 +88,22 @@ const Desktop: React.FC = () => {
     })));
   };
 
+  // Handle search result selection
+  const handleSearchSelect = (result: SearchResult) => {
+    if (result.action) {
+      createWindow(result.action);
+    }
+  };
+
+  // Toggle search dialog
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+    if (!showSearch) {
+      setShowStartMenu(false);
+      setShowSidebar(false);
+    }
+  };
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-[url('/wallpaper.jpg')] bg-cover bg-center relative flex flex-col">
       {/* Desktop area with icons */}
@@ -101,6 +120,13 @@ const Desktop: React.FC = () => {
           onUpdatePosition={updateWindowPosition}
           onUpdateSize={updateWindowSize}
         />
+        
+        {/* Universal Search */}
+        <UniversalSearch 
+          isOpen={showSearch}
+          onClose={() => setShowSearch(false)}
+          onSelect={handleSearchSelect}
+        />
       </div>
       
       {/* Taskbar */}
@@ -112,12 +138,19 @@ const Desktop: React.FC = () => {
         showStartMenu={showStartMenu}
         onToggleStartMenu={() => {
           setShowStartMenu(!showStartMenu);
-          if (!showStartMenu) setShowSidebar(false);
+          if (!showStartMenu) {
+            setShowSidebar(false);
+            setShowSearch(false);
+          }
         }}
         onToggleSidebar={() => {
           setShowSidebar(!showSidebar);
-          if (!showSidebar) setShowStartMenu(false);
+          if (!showSidebar) {
+            setShowStartMenu(false);
+            setShowSearch(false);
+          }
         }}
+        onToggleSearch={toggleSearch}
       />
       
       {/* Sidebar */}
