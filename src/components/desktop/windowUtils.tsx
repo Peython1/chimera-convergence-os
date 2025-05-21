@@ -7,7 +7,8 @@ import {
   Code, 
   Monitor, 
   Settings as SettingsIcon,
-  Wifi
+  Wifi,
+  FileText
 } from 'lucide-react';
 import WifiManager from '../wifi/WifiManager';
 import SystemMonitor from '../system/SystemMonitor';
@@ -103,6 +104,21 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
         title: 'Wi-Fi Manager',
         icon: <Wifi size={16} />,
         content: <WifiManager />
+      };
+    
+    case 'projectplan':
+      return {
+        ...defaultProps,
+        title: 'ChimeraOS Project Plan',
+        icon: <FileText size={16} />,
+        content: (
+          <iframe 
+            src="/project-plan" 
+            title="Project Plan" 
+            className="w-full h-full border-none" 
+          />
+        ),
+        size: { width: 900, height: 700 }
       };
       
     default:
