@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -348,7 +347,7 @@ createRoot(document.getElementById('root')!).render(<ChimeraShell />);`}
               <div className="mt-8">
                 <h3 className="font-bold text-lg mb-2">Métricas de Acompanhamento</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Cobertura de testes (meta: >85%)</li>
+                  <li>Cobertura de testes (meta: &gt;85%)</li>
                   <li>Compatibilidade de hardware (meta: 95% dos dispositivos populares)</li>
                   <li>Performance comparativa (meta: no máximo 10% mais lento que nativos)</li>
                   <li>Memória utilizada (meta: máximo 2GB para sistema base)</li>
@@ -513,16 +512,6 @@ impl DriverAPI for HybridInputDriver {
         // Código para processar evento do dispositivo
         Ok(())
     }
-}
-
-// Registrar driver no sistema
-#[no_mangle]
-pub extern "C" fn register_driver() -> *mut dyn DriverAPI {
-    Box::into_raw(Box::new(HybridInputDriver::new(
-        "generic_mouse", 
-        0x046d,  // Logitech
-        0xc52b,  // Mouse genérico
-    )))
 }`}
                       </pre>
                     </div>
