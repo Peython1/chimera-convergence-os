@@ -9,6 +9,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from 'react-router-dom';
 
 const ProjectPlan = () => {
   return (
@@ -18,6 +19,13 @@ const ProjectPlan = () => {
         <p className="text-muted-foreground">
           Transformando a simulação em um sistema operacional híbrido funcional
         </p>
+        <div className="flex justify-center mt-4 space-x-2">
+          <Button variant="outline" asChild>
+            <Link to="/implementation">
+              Ver Implementação Técnica
+            </Link>
+          </Button>
+        </div>
       </div>
       
       <Tabs defaultValue="architecture" className="w-full">

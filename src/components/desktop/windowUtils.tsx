@@ -121,6 +121,21 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
         size: { width: 900, height: 700 }
       };
       
+    case 'implementation':
+      return {
+        ...defaultProps,
+        title: 'ChimeraOS Implementation',
+        icon: <Code size={16} />,
+        content: (
+          <iframe 
+            src="/implementation" 
+            title="Implementation Details" 
+            className="w-full h-full border-none" 
+          />
+        ),
+        size: { width: 950, height: 700 }
+      };
+      
     default:
       return {
         ...defaultProps,

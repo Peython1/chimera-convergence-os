@@ -1,4 +1,3 @@
-
 // Tipos de resultados de pesquisa
 export type SearchResultType = 'app' | 'file' | 'setting' | 'web';
 
@@ -18,7 +17,9 @@ const apps: SearchResult[] = [
   { id: 'settings', title: 'Settings', type: 'app', action: 'settings', description: 'System configuration' },
   { id: 'store', title: 'App Store', type: 'app', action: 'store', description: 'Download applications' },
   { id: 'systemmonitor', title: 'System Monitor', type: 'app', action: 'systemMonitor', description: 'View system performance' },
-  { id: 'wifimanager', title: 'Wi-Fi Manager', type: 'app', action: 'wifiManager', description: 'Configure network connections' }
+  { id: 'wifimanager', title: 'Wi-Fi Manager', type: 'app', action: 'wifiManager', description: 'Configure network connections' },
+  { id: 'projectplan', title: 'Project Plan', type: 'app', action: 'projectplan', description: 'ChimeraOS project plan' },
+  { id: 'implementation', title: 'Implementation', type: 'app', action: 'implementation', description: 'Technical implementation details' }
 ];
 
 const files: SearchResult[] = [
