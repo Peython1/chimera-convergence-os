@@ -39,11 +39,12 @@ const SystemMonitor: React.FC = () => {
       // Simulate fluctuating system usage
       const randomCpu = 5 + Math.random() * 20; // 5-25%
       const randomMemory = 35 + Math.random() * 15; // 35-50%
+      const currentUptime = systemResources.uptime;
 
       setSystemResources({
         cpuTotal: randomCpu,
         memoryTotal: randomMemory,
-        uptime: (prev) => prev + 1
+        uptime: currentUptime + 1
       });
 
       // Update process stats randomly
@@ -57,7 +58,7 @@ const SystemMonitor: React.FC = () => {
     }, 2000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [systemResources.uptime]);
 
   // Format uptime to HH:MM:SS
   const formatUptime = (seconds: number) => {

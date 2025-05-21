@@ -35,7 +35,7 @@ const settings: SearchResult[] = [
   { id: 'set4', title: 'Appearance', type: 'setting', description: 'Themes and colors', action: 'settings' }
 ];
 
-const webResults: SearchResult[] = [
+const webResultsData: SearchResult[] = [
   { id: 'web1', title: 'ChimeraOS Documentation', type: 'web', description: 'Official documentation' },
   { id: 'web2', title: 'Chimera Forums', type: 'web', description: 'Community support' },
   { id: 'web3', title: 'ChimeraOS GitHub', type: 'web', description: 'Source code repository' }
@@ -65,7 +65,7 @@ export const universalSearch = (query: string): SearchResult[] => {
     (setting.description && setting.description.toLowerCase().includes(normalizedQuery))
   );
   
-  const webResults = webResults.filter(web => 
+  const webResults = webResultsData.filter(web => 
     web.title.toLowerCase().includes(normalizedQuery) || 
     (web.description && web.description.toLowerCase().includes(normalizedQuery))
   );
