@@ -7,6 +7,7 @@ import RepositoryStructureTab from "@/components/implementation/RepositoryStruct
 import MainComponentsTab from "@/components/implementation/MainComponentsTab";
 import ImplementationTimelineTab from "@/components/implementation/ImplementationTimelineTab";
 import ResourcesTab from "@/components/implementation/ResourcesTab";
+import ImplementationPlanTab from "@/components/implementation/ImplementationPlanTab";
 
 const Implementation = () => {
   return (
@@ -14,11 +15,12 @@ const Implementation = () => {
       <PageHeader />
       
       <Tabs defaultValue="repository" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="repository">Estrutura do Repositório</TabsTrigger>
           <TabsTrigger value="components">Componentes Principais</TabsTrigger>
           <TabsTrigger value="implementation">Cronograma</TabsTrigger>
           <TabsTrigger value="resources">Recursos</TabsTrigger>
+          <TabsTrigger value="plan">Sistema Real</TabsTrigger>
         </TabsList>
         
         <TabsContent value="repository">
@@ -35,6 +37,10 @@ const Implementation = () => {
         
         <TabsContent value="resources">
           <ResourcesTab />
+        </TabsContent>
+        
+        <TabsContent value="plan">
+          <ImplementationPlanTab />
         </TabsContent>
       </Tabs>
     </div>
