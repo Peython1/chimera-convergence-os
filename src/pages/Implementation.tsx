@@ -6,8 +6,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Code, File, Terminal, Cog, Download } from "lucide-react";
 import { Link } from 'react-router-dom';
+import { useProjectConfig } from "@/hooks/useProjectConfig";
 
 const Implementation = () => {
+  const { ROOT_DIR, RUST_TARGET } = useProjectConfig();
+  
   return (
     <div className="container mx-auto p-4 bg-background text-foreground">
       <div className="mb-8 text-center">
@@ -382,20 +385,20 @@ createRoot(document.getElementById('root')!).render(<ChimeraShell />);`}
 # scripts/build/build-all.sh
 
 # Configurar ambiente
-export CHIMERA_ROOT="$(pwd)"
-export RUST_TARGET="x86_64-unknown-none"
+export CHIMERA_ROOT="${ROOT_DIR}"
+export RUST_TARGET="${RUST_TARGET}"
 
 # Build do kernel
-cd "${CHIMERA_ROOT}/kernel/core"
+cd "${ROOT_DIR}/kernel/core"
 cargo build --release --target=${RUST_TARGET}
 
 # Build da interface
-cd "${CHIMERA_ROOT}/ui/chimera-shell"
+cd "${ROOT_DIR}/ui/chimera-shell"
 npm install
 npm run build
 
 # Gerar imagem final
-cd "${CHIMERA_ROOT}/scripts/image"
+cd "${ROOT_DIR}/scripts/image"
 ./create-iso.sh`}
                       </pre>
                     </div>
@@ -578,3 +581,5 @@ cd chimera
 };
 
 export default Implementation;
+
+</edits_to_apply>

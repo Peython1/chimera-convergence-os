@@ -29,5 +29,10 @@ export default defineConfig(({ mode }) => ({
     commonjsOptions: {
       include: [/node_modules/]
     }
+  },
+  define: {
+    // Provide fallbacks for environment variables at build time
+    __CHIMERA_ROOT__: JSON.stringify(process.env.VITE_CHIMERA_ROOT || '/opt/chimera'),
+    __RUST_TARGET__: JSON.stringify(process.env.VITE_RUST_TARGET || 'x86_64-unknown-linux-gnu')
   }
 }));
