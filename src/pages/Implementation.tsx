@@ -581,5 +581,3 @@ cd chimera
 };
 
 export default Implementation;
-
-</edits_to_apply>
