@@ -1,11 +1,32 @@
-import React, { useRef } from 'react';
+
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Points, Point } from '@react-three/drei';
 import * as THREE from 'three';
 
 export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);
   const emberRef = useRef<THREE.Points>(null);
+
+  // Create particle positions
+  const dustPositions = useMemo(() => {
+    const positions = new Float32Array(200 * 3); // Reduced particles
+    for (let i = 0; i < 200; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 30;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+    }
+    return positions;
+  }, []);
+
+  const emberPositions = useMemo(() => {
+    const positions = new Float32Array(100 * 3); // Reduced particles
+    for (let i = 0; i < 100; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 15;
+      positions[i * 3 + 1] = Math.random() * 10;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
+    }
+    return positions;
+  }, []);
 
   useFrame((state) => {
     if (dustRef.current) {
@@ -21,7 +42,13 @@ export const MythologicalAmbient: React.FC = () => {
   return (
     <group>
       {/* Golden Dust Particles */}
-      <Points ref={dustRef} limit={1000}>
+      <points ref={dustRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[dustPositions, 3]}
+          />
+        </bufferGeometry>
         <pointsMaterial 
           size={0.02} 
           color="#ffd700" 
@@ -29,20 +56,16 @@ export const MythologicalAmbient: React.FC = () => {
           opacity={0.6}
           sizeAttenuation
         />
-        {Array.from({ length: 500 }).map((_, i) => (
-          <Point
-            key={i}
-            position={[
-              (Math.random() - 0.5) * 40,
-              (Math.random() - 0.5) * 20,
-              (Math.random() - 0.5) * 40
-            ]}
-          />
-        ))}
-      </Points>
+      </points>
       
       {/* Fire Embers */}
-      <Points ref={emberRef} limit={300}>
+      <points ref={emberRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[emberPositions, 3]}
+          />
+        </bufferGeometry>
         <pointsMaterial 
           size={0.05} 
           color="#ff6b35" 
@@ -50,17 +73,7 @@ export const MythologicalAmbient: React.FC = () => {
           opacity={0.8}
           sizeAttenuation
         />
-        {Array.from({ length: 200 }).map((_, i) => (
-          <Point
-            key={i}
-            position={[
-              (Math.random() - 0.5) * 20,
-              Math.random() * 15,
-              (Math.random() - 0.5) * 20
-            ]}
-          />
-        ))}
-      </Points>
+      </points>
     </group>
   );
 };

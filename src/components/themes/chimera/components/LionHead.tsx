@@ -15,8 +15,8 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
 
   // Create fire particles
   const fireParticles = useMemo(() => {
-    const particles = new Float32Array(1000 * 3);
-    for (let i = 0; i < 1000; i++) {
+    const particles = new Float32Array(300 * 3); // Reduced particle count
+    for (let i = 0; i < 300; i++) {
       particles[i * 3] = (Math.random() - 0.5) * 2;
       particles[i * 3 + 1] = Math.random() * 3;
       particles[i * 3 + 2] = (Math.random() - 0.5) * 2;
@@ -29,14 +29,13 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
     
-    if (fireRef.current) {
-      fireRef.current.rotation.y += 0.01;
+    if (fireRef.current && fireRef.current.geometry.attributes.position) {
       const positions = fireRef.current.geometry.attributes.position.array as Float32Array;
       
       for (let i = 1; i < positions.length; i += 3) {
-        positions[i] += 0.02; // Move particles up
+        positions[i] += 0.02;
         if (positions[i] > 3) {
-          positions[i] = 0; // Reset to bottom
+          positions[i] = 0;
         }
       }
       

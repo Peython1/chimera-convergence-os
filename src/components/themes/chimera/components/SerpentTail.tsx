@@ -8,14 +8,14 @@ export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
 
   const serpentSegments = useMemo(() => {
-    return Array.from({ length: 20 }, (_, i) => ({
+    return Array.from({ length: 15 }, (_, i) => ({ // Reduced segments
       id: i,
       position: [
-        Math.sin(i * 0.5) * 3,
+        Math.sin(i * 0.5) * 2,
         -2 + Math.cos(i * 0.3) * 0.5,
-        -10 + i * 0.8
+        -8 + i * 0.6
       ] as [number, number, number],
-      scale: Math.max(0.3, 1 - i * 0.03)
+      scale: Math.max(0.3, 1 - i * 0.04)
     }));
   }, []);
 
@@ -23,9 +23,11 @@ export const SerpentTail: React.FC = () => {
     if (groupRef.current) {
       groupRef.current.children.forEach((child, i) => {
         const time = state.clock.elapsedTime;
-        child.position.x = Math.sin(time + i * 0.5) * 3;
-        child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
-        child.rotation.z = Math.sin(time + i * 0.2) * 0.3;
+        if (child.position) {
+          child.position.x = Math.sin(time + i * 0.5) * 2;
+          child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
+          child.rotation.z = Math.sin(time + i * 0.2) * 0.2;
+        }
       });
     }
   });
@@ -33,11 +35,10 @@ export const SerpentTail: React.FC = () => {
   return (
     <group ref={groupRef}>
       {serpentSegments.map((segment) => (
-        <group key={segment.id}>
+        <group key={segment.id} position={segment.position}>
           {/* Serpent Body Segment */}
           <Cylinder
             args={[segment.scale, segment.scale * 0.8, 0.5, 8]}
-            position={segment.position}
           >
             <meshPhongMaterial 
               color="#2d5a27"
@@ -47,17 +48,20 @@ export const SerpentTail: React.FC = () => {
             />
           </Cylinder>
           
-          {/* Scales */}
-          {Array.from({ length: 6 }).map((_, scaleIndex) => {
-            const scaleAngle = (scaleIndex / 6) * Math.PI * 2;
-            const scaleX = segment.position[0] + Math.cos(scaleAngle) * segment.scale * 0.9;
-            const scaleZ = segment.position[2] + Math.sin(scaleAngle) * segment.scale * 0.9;
+          {/* Simplified scales */}
+          {Array.from({ length: 4 }).map((_, scaleIndex) => { // Reduced scales
+            const scaleAngle = (scaleIndex / 4) * Math.PI * 2;
+            const scaleRadius = segment.scale * 0.9;
             
             return (
               <Cylinder
                 key={scaleIndex}
-                args={[0.05, 0.03, 0.1, 6]}
-                position={[scaleX, segment.position[1], scaleZ]}
+                args={[0.03, 0.02, 0.08, 6]}
+                position={[
+                  Math.cos(scaleAngle) * scaleRadius,
+                  0,
+                  Math.sin(scaleAngle) * scaleRadius
+                ]}
                 rotation={[Math.PI / 2, scaleAngle, 0]}
               >
                 <meshPhongMaterial 

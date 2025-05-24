@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Plane, Box } from '@react-three/drei';
@@ -26,13 +27,12 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
       {/* Mountain Terrain */}
       <Plane 
         ref={terrainRef}
-        args={[50, 50, 32, 32]} 
+        args={[40, 40, 16, 16]} 
         rotation={[-Math.PI / 2, 0, 0]} 
         position={[0, -3, 0]}
       >
         <meshPhongMaterial 
           color="#8b7355"
-          wireframe={false}
           transparent
           opacity={0.8}
         />
@@ -40,17 +40,17 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
       
       {/* Goat Horns */}
       <group ref={hornsRef}>
-        {Array.from({ length: 8 }).map((_, i) => {
-          const angle = (i / 8) * Math.PI * 2;
-          const radius = 15 + (mythosLevel / 100) * 5;
+        {Array.from({ length: 6 }).map((_, i) => { // Reduced horns
+          const angle = (i / 6) * Math.PI * 2;
+          const radius = 12 + (mythosLevel / 100) * 3;
           const x = Math.cos(angle) * radius;
           const z = Math.sin(angle) * radius;
           
           return (
             <group key={i} position={[x, -1, z]}>
               <Box 
-                args={[0.2, 3, 0.2]} 
-                rotation={[0, angle, Math.PI / 6]}
+                args={[0.15, 2.5, 0.15]} 
+                rotation={[0, angle, Math.PI / 8]}
               >
                 <meshPhongMaterial 
                   color="#654321"
@@ -59,9 +59,9 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
                 />
               </Box>
               <Box 
-                args={[0.15, 2.5, 0.15]} 
-                position={[0, 0.5, 0]}
-                rotation={[0, angle, Math.PI / 4]}
+                args={[0.1, 2, 0.1]} 
+                position={[0, 0.4, 0]}
+                rotation={[0, angle, Math.PI / 6]}
               >
                 <meshPhongMaterial 
                   color="#8b7355"
