@@ -2,7 +2,7 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Cylinder } from '@react-three/drei';
-import * as THREE from 'three';
+import * THREE from 'three';
 
 export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);

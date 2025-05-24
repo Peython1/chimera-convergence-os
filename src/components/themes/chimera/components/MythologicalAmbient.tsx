@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Points, Point } from '@react-three/drei';
-import * as THREE from 'three';
+import * THREE from 'three';
 
 export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);

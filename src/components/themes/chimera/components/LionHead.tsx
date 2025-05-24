@@ -83,9 +83,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            array={fireParticles}
-            count={fireParticles.length / 3}
-            itemSize={3}
+            args={[fireParticles, 3]}
           />
         </bufferGeometry>
         <pointsMaterial 

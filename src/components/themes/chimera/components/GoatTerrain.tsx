@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Plane, Box } from '@react-three/drei';
-import * as THREE from 'three';
+import * THREE from 'three';
 
 interface GoatTerrainProps {
   mythosLevel: number;
