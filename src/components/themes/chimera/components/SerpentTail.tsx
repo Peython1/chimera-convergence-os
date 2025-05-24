@@ -1,3 +1,4 @@
+
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Cylinder } from '@react-three/drei';
@@ -5,7 +6,6 @@ import * as THREE from 'three';
 
 export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
-  const scalesRef = useRef<THREE.Group>(null);
 
   const serpentSegments = useMemo(() => {
     return Array.from({ length: 20 }, (_, i) => ({
@@ -28,10 +28,6 @@ export const SerpentTail: React.FC = () => {
         child.rotation.z = Math.sin(time + i * 0.2) * 0.3;
       });
     }
-    
-    if (scalesRef.current) {
-      scalesRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-    }
   });
 
   return (
@@ -52,28 +48,26 @@ export const SerpentTail: React.FC = () => {
           </Cylinder>
           
           {/* Scales */}
-          <group ref={segment.id === 0 ? scalesRef : undefined}>
-            {Array.from({ length: 6 }).map((_, scaleIndex) => {
-              const scaleAngle = (scaleIndex / 6) * Math.PI * 2;
-              const scaleX = segment.position[0] + Math.cos(scaleAngle) * segment.scale * 0.9;
-              const scaleZ = segment.position[2] + Math.sin(scaleAngle) * segment.scale * 0.9;
-              
-              return (
-                <Cylinder
-                  key={scaleIndex}
-                  args={[0.05, 0.03, 0.1, 6]}
-                  position={[scaleX, segment.position[1], scaleZ]}
-                  rotation={[Math.PI / 2, scaleAngle, 0]}
-                >
-                  <meshPhongMaterial 
-                    color="#4a7c59"
-                    emissive="#2d5a27"
-                    emissiveIntensity={0.1}
-                  />
-                </Cylinder>
-              );
-            })}
-          </group>
+          {Array.from({ length: 6 }).map((_, scaleIndex) => {
+            const scaleAngle = (scaleIndex / 6) * Math.PI * 2;
+            const scaleX = segment.position[0] + Math.cos(scaleAngle) * segment.scale * 0.9;
+            const scaleZ = segment.position[2] + Math.sin(scaleAngle) * segment.scale * 0.9;
+            
+            return (
+              <Cylinder
+                key={scaleIndex}
+                args={[0.05, 0.03, 0.1, 6]}
+                position={[scaleX, segment.position[1], scaleZ]}
+                rotation={[Math.PI / 2, scaleAngle, 0]}
+              >
+                <meshPhongMaterial 
+                  color="#4a7c59"
+                  emissive="#2d5a27"
+                  emissiveIntensity={0.1}
+                />
+              </Cylinder>
+            );
+          })}
         </group>
       ))}
     </group>
