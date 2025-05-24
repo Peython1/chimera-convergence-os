@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import Taskbar from './Taskbar';
 import Sidebar from './Sidebar';
 import WindowManager from './WindowManager';
 import DesktopIcons from './DesktopIcons';
 import UniversalSearch from './UniversalSearch';
+import ChimeraTheme from '../themes/chimera/ChimeraTheme';
+import { useChimeraTheme } from '../themes/chimera/hooks/useChimeraTheme';
 import { WindowData } from './types';
 import { generateWindow } from './windowUtils';
 import { SearchResult } from '../../services/universalSearch';
@@ -104,61 +105,84 @@ const Desktop: React.FC = () => {
     }
   };
 
+  const { mythosLevel, fireIntensity, currentForm, playMythologicalSound } = useChimeraTheme();
+
+  // Enhanced login sound effect
+  React.useEffect(() => {
+    playMythologicalSound('login');
+  }, []);
+
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[url('/wallpaper.jpg')] bg-cover bg-center relative flex flex-col">
-      {/* Desktop area with icons */}
-      <div className="flex-1 overflow-hidden p-4">
-        <DesktopIcons onCreateWindow={createWindow} />
+    <ChimeraTheme intensity={fireIntensity} mythosLevel={mythosLevel}>
+      <div className="h-screen w-screen overflow-hidden relative flex flex-col">
+        {/* Desktop area with mythological styling */}
+        <div className="flex-1 overflow-hidden p-4 relative">
+          {/* Mythological overlay effects */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className={`absolute top-4 right-4 text-golden-400 font-serif text-sm opacity-70 transition-all duration-1000 ${
+              currentForm === 'lion' ? 'text-yellow-400' : 
+              currentForm === 'goat' ? 'text-amber-600' : 'text-green-400'
+            }`}>
+              Current Form: {currentForm.charAt(0).toUpperCase() + currentForm.slice(1)}
+            </div>
+            
+            <div className="absolute bottom-20 left-4 text-golden-400 font-serif text-xs opacity-50">
+              Mythos Level: {mythosLevel}%
+            </div>
+          </div>
+          
+          <DesktopIcons onCreateWindow={createWindow} />
+          
+          {/* Windows with mythological borders */}
+          <WindowManager
+            windows={windows}
+            activeWindowId={activeWindowId}
+            onActivateWindow={setActiveWindow}
+            onCloseWindow={closeWindow}
+            onMaximizeWindow={toggleMaximize}
+            onUpdatePosition={updateWindowPosition}
+            onUpdateSize={updateWindowSize}
+          />
+          
+          {/* Universal Search with chimera styling */}
+          <UniversalSearch 
+            isOpen={showSearch}
+            onClose={() => setShowSearch(false)}
+            onSelect={handleSearchSelect}
+          />
+        </div>
         
-        {/* Windows */}
-        <WindowManager
+        {/* Taskbar with golden theme */}
+        <Taskbar
           windows={windows}
           activeWindowId={activeWindowId}
           onActivateWindow={setActiveWindow}
-          onCloseWindow={closeWindow}
-          onMaximizeWindow={toggleMaximize}
-          onUpdatePosition={updateWindowPosition}
-          onUpdateSize={updateWindowSize}
+          onCreateWindow={createWindow}
+          showStartMenu={showStartMenu}
+          onToggleStartMenu={() => {
+            setShowStartMenu(!showStartMenu);
+            if (!showStartMenu) {
+              setShowSidebar(false);
+              setShowSearch(false);
+            }
+          }}
+          onToggleSidebar={() => {
+            setShowSidebar(!showSidebar);
+            if (!showSidebar) {
+              setShowStartMenu(false);
+              setShowSearch(false);
+            }
+          }}
+          onToggleSearch={toggleSearch}
         />
         
-        {/* Universal Search */}
-        <UniversalSearch 
-          isOpen={showSearch}
-          onClose={() => setShowSearch(false)}
-          onSelect={handleSearchSelect}
+        {/* Sidebar with mythological elements */}
+        <Sidebar 
+          isOpen={showSidebar}
+          onClose={() => setShowSidebar(false)} 
         />
       </div>
-      
-      {/* Taskbar */}
-      <Taskbar
-        windows={windows}
-        activeWindowId={activeWindowId}
-        onActivateWindow={setActiveWindow}
-        onCreateWindow={createWindow}
-        showStartMenu={showStartMenu}
-        onToggleStartMenu={() => {
-          setShowStartMenu(!showStartMenu);
-          if (!showStartMenu) {
-            setShowSidebar(false);
-            setShowSearch(false);
-          }
-        }}
-        onToggleSidebar={() => {
-          setShowSidebar(!showSidebar);
-          if (!showSidebar) {
-            setShowStartMenu(false);
-            setShowSearch(false);
-          }
-        }}
-        onToggleSearch={toggleSearch}
-      />
-      
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={showSidebar}
-        onClose={() => setShowSidebar(false)} 
-      />
-    </div>
+    </ChimeraTheme>
   );
 };
 

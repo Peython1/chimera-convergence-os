@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -123,4 +122,131 @@
   background: rgba(15, 15, 15, 0.7);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Chimera Theme Styles */
+.chimera-theme {
+  cursor: none; /* Hide default cursor for custom chimera cursor */
+}
+
+.chimera-theme .window-border {
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, #ffd700, #ff6b35) border-box;
+  background-clip: padding-box, border-box;
+  position: relative;
+}
+
+.chimera-theme .window-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 10px;
+  width: 8px;
+  height: 12px;
+  background: linear-gradient(to bottom, #8b4513, #654321);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(-15deg);
+}
+
+.chimera-theme .window-border::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: 10px;
+  width: 8px;
+  height: 12px;
+  background: linear-gradient(to bottom, #8b4513, #654321);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(15deg);
+}
+
+/* Serpent Scale Scrollbar */
+.chimera-theme ::-webkit-scrollbar {
+  width: 12px;
+  background: linear-gradient(to bottom, #2d5a27, #1a472a);
+}
+
+.chimera-theme ::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #4a7c59, #2d5a27);
+  border-radius: 6px;
+  border: 1px solid #1a472a;
+  position: relative;
+}
+
+.chimera-theme ::-webkit-scrollbar-thumb::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #6b8e23,
+    #6b8e23 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  top: 2px;
+  animation: serpent-scales 2s linear infinite;
+}
+
+@keyframes serpent-scales {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(4px); }
+}
+
+/* Fire Effects for Window Borders */
+.chimera-theme .fire-border {
+  position: relative;
+  overflow: visible;
+}
+
+.chimera-theme .fire-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff4500, #ffd700, #ff6b35, #ff4500);
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: fire-flicker 3s ease-in-out infinite;
+  filter: blur(1px);
+}
+
+@keyframes fire-flicker {
+  0%, 100% { 
+    background-position: 0% 50%; 
+    opacity: 0.7;
+  }
+  50% { 
+    background-position: 100% 50%; 
+    opacity: 0.9;
+  }
+}
+
+/* Golden Text Effects */
+.chimera-theme .text-golden {
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #ffc107);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Mythological Glow Effects */
+.chimera-theme .mythos-glow {
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.3),
+    0 0 40px rgba(255, 107, 53, 0.2),
+    inset 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+/* Ancient Greek Text Effect */
+.chimera-theme .ancient-text {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: 1px;
 }
