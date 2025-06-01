@@ -13,7 +13,8 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
   const groupRef = useRef<THREE.Group>(null);
   const fireRef = useRef<THREE.Points>(null);
 
-  const fireParticles = useMemo(() => {
+  const fireGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
     const count = 150;
     const positions = new Float32Array(count * 3);
     
@@ -23,7 +24,8 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
       positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
     }
     
-    return positions;
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geometry;
   }, []);
 
   useFrame((state) => {
@@ -68,15 +70,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         );
       })}
       
-      <points ref={fireRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={fireParticles.length / 3}
-            array={fireParticles}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points ref={fireRef} geometry={fireGeometry}>
         <pointsMaterial 
           size={0.1} 
           color="#ff4500"

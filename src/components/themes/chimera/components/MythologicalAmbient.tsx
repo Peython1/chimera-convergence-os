@@ -7,7 +7,8 @@ export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);
   const emberRef = useRef<THREE.Points>(null);
 
-  const dustPositions = useMemo(() => {
+  const dustGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
     const count = 100;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -15,10 +16,12 @@ export const MythologicalAmbient: React.FC = () => {
       positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
     }
-    return positions;
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geometry;
   }, []);
 
-  const emberPositions = useMemo(() => {
+  const emberGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
     const count = 50;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -26,7 +29,8 @@ export const MythologicalAmbient: React.FC = () => {
       positions[i * 3 + 1] = Math.random() * 10;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
     }
-    return positions;
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geometry;
   }, []);
 
   useFrame((state) => {
@@ -42,15 +46,7 @@ export const MythologicalAmbient: React.FC = () => {
 
   return (
     <group>
-      <points ref={dustRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={dustPositions.length / 3}
-            array={dustPositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points ref={dustRef} geometry={dustGeometry}>
         <pointsMaterial 
           size={0.02} 
           color="#ffd700" 
@@ -60,15 +56,7 @@ export const MythologicalAmbient: React.FC = () => {
         />
       </points>
       
-      <points ref={emberRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={emberPositions.length / 3}
-            array={emberPositions}
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points ref={emberRef} geometry={emberGeometry}>
         <pointsMaterial 
           size={0.05} 
           color="#ff6b35" 
