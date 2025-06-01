@@ -24,7 +24,6 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
 
   return (
     <group>
-      {/* Mountain Terrain */}
       <Plane 
         ref={terrainRef}
         args={[40, 40, 16, 16]} 
@@ -38,7 +37,6 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
         />
       </Plane>
       
-      {/* Goat Horns */}
       <group ref={hornsRef}>
         {Array.from({ length: 6 }, (_, i) => {
           const angle = (i / 6) * Math.PI * 2;
@@ -52,18 +50,14 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
                 args={[0.15, 2.5, 0.15]} 
                 rotation={[0, angle, Math.PI / 8]}
               >
-                <meshPhongMaterial 
-                  color="#654321"
-                />
+                <meshPhongMaterial color="#654321" />
               </Box>
               <Box 
                 args={[0.1, 2, 0.1]} 
                 position={[0, 0.4, 0]}
                 rotation={[0, angle, Math.PI / 6]}
               >
-                <meshPhongMaterial 
-                  color="#8b7355"
-                />
+                <meshPhongMaterial color="#8b7355" />
               </Box>
             </group>
           );

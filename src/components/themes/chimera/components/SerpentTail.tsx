@@ -8,7 +8,7 @@ export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
 
   const serpentSegments = useMemo(() => {
-    return Array.from({ length: 15 }, (_, i) => ({
+    return Array.from({ length: 8 }, (_, i) => ({
       id: i,
       position: [
         Math.sin(i * 0.5) * 2,
@@ -36,37 +36,11 @@ export const SerpentTail: React.FC = () => {
     <group ref={groupRef}>
       {serpentSegments.map((segment) => (
         <group key={segment.id} position={segment.position}>
-          {/* Serpent Body Segment */}
           <Cylinder
             args={[segment.scale, segment.scale * 0.8, 0.5, 8]}
           >
-            <meshPhongMaterial 
-              color="#2d5a27"
-            />
+            <meshPhongMaterial color="#2d5a27" />
           </Cylinder>
-          
-          {/* Simplified scales */}
-          {Array.from({ length: 4 }, (_, scaleIndex) => {
-            const scaleAngle = (scaleIndex / 4) * Math.PI * 2;
-            const scaleRadius = segment.scale * 0.9;
-            
-            return (
-              <Cylinder
-                key={scaleIndex}
-                args={[0.03, 0.02, 0.08, 6]}
-                position={[
-                  Math.cos(scaleAngle) * scaleRadius,
-                  0,
-                  Math.sin(scaleAngle) * scaleRadius
-                ]}
-                rotation={[Math.PI / 2, scaleAngle, 0]}
-              >
-                <meshPhongMaterial 
-                  color="#4a7c59"
-                />
-              </Cylinder>
-            );
-          })}
         </group>
       ))}
     </group>

@@ -13,15 +13,17 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
   const groupRef = useRef<THREE.Group>(null);
   const fireRef = useRef<THREE.Points>(null);
 
-  // Create fire particles
   const fireParticles = useMemo(() => {
-    const particles = new Float32Array(300 * 3);
-    for (let i = 0; i < 300; i++) {
-      particles[i * 3] = (Math.random() - 0.5) * 2;
-      particles[i * 3 + 1] = Math.random() * 3;
-      particles[i * 3 + 2] = (Math.random() - 0.5) * 2;
+    const count = 150;
+    const positions = new Float32Array(count * 3);
+    
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 2;
+      positions[i * 3 + 1] = Math.random() * 3;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
     }
-    return particles;
+    
+    return positions;
   }, []);
 
   useFrame((state) => {
@@ -45,15 +47,10 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
 
   return (
     <group ref={groupRef} position={position}>
-      {/* Lion Head Base */}
       <Sphere args={[1.5, 32, 32]} position={[0, 0, 0]}>
-        <meshPhongMaterial 
-          color="#ffd700" 
-          shininess={100}
-        />
+        <meshPhongMaterial color="#ffd700" shininess={100} />
       </Sphere>
       
-      {/* Lion Mane */}
       {Array.from({ length: 12 }, (_, i) => {
         const angle = (i / 12) * Math.PI * 2;
         const x = Math.cos(angle) * 1.8;
@@ -66,14 +63,11 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
             position={[x, 0.2, z]}
             rotation={[0, angle, 0]}
           >
-            <meshPhongMaterial 
-              color="#ff8c42"
-            />
+            <meshPhongMaterial color="#ff8c42" />
           </Box>
         );
       })}
       
-      {/* Fire Effect */}
       <points ref={fireRef}>
         <bufferGeometry>
           <bufferAttribute

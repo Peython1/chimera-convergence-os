@@ -7,10 +7,10 @@ export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);
   const emberRef = useRef<THREE.Points>(null);
 
-  // Create particle positions
   const dustPositions = useMemo(() => {
-    const positions = new Float32Array(200 * 3);
-    for (let i = 0; i < 200; i++) {
+    const count = 100;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 30;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
@@ -19,8 +19,9 @@ export const MythologicalAmbient: React.FC = () => {
   }, []);
 
   const emberPositions = useMemo(() => {
-    const positions = new Float32Array(100 * 3);
-    for (let i = 0; i < 100; i++) {
+    const count = 50;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 15;
       positions[i * 3 + 1] = Math.random() * 10;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
@@ -41,7 +42,6 @@ export const MythologicalAmbient: React.FC = () => {
 
   return (
     <group>
-      {/* Golden Dust Particles */}
       <points ref={dustRef}>
         <bufferGeometry>
           <bufferAttribute
@@ -60,7 +60,6 @@ export const MythologicalAmbient: React.FC = () => {
         />
       </points>
       
-      {/* Fire Embers */}
       <points ref={emberRef}>
         <bufferGeometry>
           <bufferAttribute
