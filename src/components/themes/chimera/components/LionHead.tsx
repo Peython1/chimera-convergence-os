@@ -15,7 +15,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
 
   // Create fire particles
   const fireParticles = useMemo(() => {
-    const particles = new Float32Array(300 * 3); // Reduced particle count
+    const particles = new Float32Array(300 * 3);
     for (let i = 0; i < 300; i++) {
       particles[i * 3] = (Math.random() - 0.5) * 2;
       particles[i * 3 + 1] = Math.random() * 3;
@@ -50,13 +50,11 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         <meshPhongMaterial 
           color="#ffd700" 
           shininess={100}
-          emissive="#ff6b35"
-          emissiveIntensity={0.2}
         />
       </Sphere>
       
       {/* Lion Mane */}
-      {Array.from({ length: 12 }).map((_, i) => {
+      {Array.from({ length: 12 }, (_, i) => {
         const angle = (i / 12) * Math.PI * 2;
         const x = Math.cos(angle) * 1.8;
         const z = Math.sin(angle) * 1.8;
@@ -69,9 +67,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
             rotation={[0, angle, 0]}
           >
             <meshPhongMaterial 
-              color="#ff8c42" 
-              emissive="#ff4500"
-              emissiveIntensity={fireIntensity * 0.3}
+              color="#ff8c42"
             />
           </Box>
         );
@@ -82,7 +78,9 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            args={[fireParticles, 3]}
+            count={fireParticles.length / 3}
+            array={fireParticles}
+            itemSize={3}
           />
         </bufferGeometry>
         <pointsMaterial 

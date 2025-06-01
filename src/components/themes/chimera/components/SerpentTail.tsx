@@ -8,7 +8,7 @@ export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
 
   const serpentSegments = useMemo(() => {
-    return Array.from({ length: 15 }, (_, i) => ({ // Reduced segments
+    return Array.from({ length: 15 }, (_, i) => ({
       id: i,
       position: [
         Math.sin(i * 0.5) * 2,
@@ -42,14 +42,11 @@ export const SerpentTail: React.FC = () => {
           >
             <meshPhongMaterial 
               color="#2d5a27"
-              emissive="#1a472a"
-              emissiveIntensity={0.2}
-              shininess={200}
             />
           </Cylinder>
           
           {/* Simplified scales */}
-          {Array.from({ length: 4 }).map((_, scaleIndex) => { // Reduced scales
+          {Array.from({ length: 4 }, (_, scaleIndex) => {
             const scaleAngle = (scaleIndex / 4) * Math.PI * 2;
             const scaleRadius = segment.scale * 0.9;
             
@@ -66,8 +63,6 @@ export const SerpentTail: React.FC = () => {
               >
                 <meshPhongMaterial 
                   color="#4a7c59"
-                  emissive="#2d5a27"
-                  emissiveIntensity={0.1}
                 />
               </Cylinder>
             );

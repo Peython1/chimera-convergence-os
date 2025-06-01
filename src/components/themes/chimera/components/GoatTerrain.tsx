@@ -40,7 +40,7 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
       
       {/* Goat Horns */}
       <group ref={hornsRef}>
-        {Array.from({ length: 6 }).map((_, i) => { // Reduced horns
+        {Array.from({ length: 6 }, (_, i) => {
           const angle = (i / 6) * Math.PI * 2;
           const radius = 12 + (mythosLevel / 100) * 3;
           const x = Math.cos(angle) * radius;
@@ -54,8 +54,6 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
               >
                 <meshPhongMaterial 
                   color="#654321"
-                  emissive="#8b4513"
-                  emissiveIntensity={0.1}
                 />
               </Box>
               <Box 
@@ -65,8 +63,6 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
               >
                 <meshPhongMaterial 
                   color="#8b7355"
-                  emissive="#a0522d"
-                  emissiveIntensity={0.1}
                 />
               </Box>
             </group>

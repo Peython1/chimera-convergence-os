@@ -9,7 +9,7 @@ export const MythologicalAmbient: React.FC = () => {
 
   // Create particle positions
   const dustPositions = useMemo(() => {
-    const positions = new Float32Array(200 * 3); // Reduced particles
+    const positions = new Float32Array(200 * 3);
     for (let i = 0; i < 200; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 30;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
@@ -19,7 +19,7 @@ export const MythologicalAmbient: React.FC = () => {
   }, []);
 
   const emberPositions = useMemo(() => {
-    const positions = new Float32Array(100 * 3); // Reduced particles
+    const positions = new Float32Array(100 * 3);
     for (let i = 0; i < 100; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 15;
       positions[i * 3 + 1] = Math.random() * 10;
@@ -46,7 +46,9 @@ export const MythologicalAmbient: React.FC = () => {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            args={[dustPositions, 3]}
+            count={dustPositions.length / 3}
+            array={dustPositions}
+            itemSize={3}
           />
         </bufferGeometry>
         <pointsMaterial 
@@ -63,7 +65,9 @@ export const MythologicalAmbient: React.FC = () => {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            args={[emberPositions, 3]}
+            count={emberPositions.length / 3}
+            array={emberPositions}
+            itemSize={3}
           />
         </bufferGeometry>
         <pointsMaterial 
