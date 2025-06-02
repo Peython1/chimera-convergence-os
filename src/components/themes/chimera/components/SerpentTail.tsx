@@ -20,7 +20,7 @@ export const SerpentTail: React.FC = () => {
   }, []);
 
   useFrame((state) => {
-    if (groupRef.current) {
+    if (groupRef.current?.children) {
       groupRef.current.children.forEach((child, i) => {
         const time = state.clock.elapsedTime;
         if (child.position) {

@@ -28,23 +28,35 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
     return geometry;
   }, []);
 
+  const fireMaterial = useMemo(() => {
+    return new THREE.PointsMaterial({
+      size: 0.1,
+      color: '#ff4500',
+      transparent: true,
+      opacity: fireIntensity,
+      sizeAttenuation: true
+    });
+  }, [fireIntensity]);
+
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
     
-    if (fireRef.current && fireRef.current.geometry.attributes.position) {
+    if (fireRef.current?.geometry?.attributes?.position) {
       const positionAttribute = fireRef.current.geometry.attributes.position;
-      const positions = positionAttribute.array as Float32Array;
-      
-      for (let i = 1; i < positions.length; i += 3) {
-        positions[i] += 0.02;
-        if (positions[i] > 3) {
-          positions[i] = 0;
+      if (positionAttribute.array) {
+        const positions = positionAttribute.array as Float32Array;
+        
+        for (let i = 1; i < positions.length; i += 3) {
+          positions[i] += 0.02;
+          if (positions[i] > 3) {
+            positions[i] = 0;
+          }
         }
+        
+        positionAttribute.needsUpdate = true;
       }
-      
-      positionAttribute.needsUpdate = true;
     }
   });
 
@@ -71,15 +83,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         );
       })}
       
-      <points ref={fireRef} geometry={fireGeometry}>
-        <pointsMaterial 
-          size={0.1} 
-          color="#ff4500"
-          transparent
-          opacity={fireIntensity}
-          sizeAttenuation
-        />
-      </points>
+      <points ref={fireRef} geometry={fireGeometry} material={fireMaterial} />
     </group>
   );
 };

@@ -33,6 +33,26 @@ export const MythologicalAmbient: React.FC = () => {
     return geometry;
   }, []);
 
+  const dustMaterial = useMemo(() => {
+    return new THREE.PointsMaterial({
+      size: 0.02,
+      color: '#ffd700',
+      transparent: true,
+      opacity: 0.6,
+      sizeAttenuation: true
+    });
+  }, []);
+
+  const emberMaterial = useMemo(() => {
+    return new THREE.PointsMaterial({
+      size: 0.05,
+      color: '#ff6b35',
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true
+    });
+  }, []);
+
   useFrame((state) => {
     if (dustRef.current) {
       dustRef.current.rotation.y = state.clock.elapsedTime * 0.05;
@@ -46,25 +66,8 @@ export const MythologicalAmbient: React.FC = () => {
 
   return (
     <group>
-      <points ref={dustRef} geometry={dustGeometry}>
-        <pointsMaterial 
-          size={0.02} 
-          color="#ffd700" 
-          transparent 
-          opacity={0.6}
-          sizeAttenuation
-        />
-      </points>
-      
-      <points ref={emberRef} geometry={emberGeometry}>
-        <pointsMaterial 
-          size={0.05} 
-          color="#ff6b35" 
-          transparent 
-          opacity={0.8}
-          sizeAttenuation
-        />
-      </points>
+      <points ref={dustRef} geometry={dustGeometry} material={dustMaterial} />
+      <points ref={emberRef} geometry={emberGeometry} material={emberMaterial} />
     </group>
   );
 };
