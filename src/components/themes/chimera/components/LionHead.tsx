@@ -34,7 +34,8 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
     }
     
     if (fireRef.current && fireRef.current.geometry.attributes.position) {
-      const positions = fireRef.current.geometry.attributes.position.array as Float32Array;
+      const positionAttribute = fireRef.current.geometry.attributes.position;
+      const positions = positionAttribute.array as Float32Array;
       
       for (let i = 1; i < positions.length; i += 3) {
         positions[i] += 0.02;
@@ -43,7 +44,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         }
       }
       
-      fireRef.current.geometry.attributes.position.needsUpdate = true;
+      positionAttribute.needsUpdate = true;
     }
   });
 
