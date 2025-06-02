@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Plane, Box } from '@react-three/drei';
 import * as THREE from 'three';
@@ -12,24 +12,37 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
   const terrainRef = useRef<THREE.Mesh>(null);
   const hornsRef = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
-    if (terrainRef.current?.position) {
-      terrainRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+  const updateAnimation = useCallback((state: any) => {
+    try {
+      const time = state.clock?.elapsedTime || 0;
+      
+      if (terrainRef.current?.position) {
+        terrainRef.current.position.y = Math.sin(time * 0.3) * 0.1;
+      }
+      
+      if (hornsRef.current?.rotation) {
+        hornsRef.current.rotation.y = time * 0.2;
+      }
+    } catch (error) {
+      console.error('Error in terrain animation:', error);
     }
-    
-    if (hornsRef.current?.rotation) {
-      hornsRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    }
-  });
+  }, []);
+
+  useFrame(updateAnimation);
 
   const hornPositions = React.useMemo(() => {
-    return Array.from({ length: 6 }, (_, i) => {
-      const angle = (i / 6) * Math.PI * 2;
-      const radius = 12 + (mythosLevel / 100) * 3;
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      return { x, z, angle };
-    });
+    try {
+      return Array.from({ length: 6 }, (_, i) => {
+        const angle = (i / 6) * Math.PI * 2;
+        const radius = 12 + (mythosLevel / 100) * 3;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        return { x, z, angle };
+      });
+    } catch (error) {
+      console.error('Error creating horn positions:', error);
+      return [];
+    }
   }, [mythosLevel]);
 
   return (

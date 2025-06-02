@@ -1,5 +1,5 @@
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Sphere, Box } from '@react-three/drei';
 import * as THREE from 'three';
@@ -14,37 +14,45 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
   const fireRef = useRef<THREE.Points>(null);
 
   const { fireGeometry, fireMaterial } = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const count = 150;
-    const positions = new Float32Array(count * 3);
-    
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 2;
-      positions[i * 3 + 1] = Math.random() * 3;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
-    }
-    
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-    const material = new THREE.PointsMaterial({
-      size: 0.1,
-      color: '#ff4500',
-      transparent: true,
-      opacity: fireIntensity,
-      sizeAttenuation: true
-    });
+    try {
+      const geometry = new THREE.BufferGeometry();
+      const count = 150;
+      const positions = new Float32Array(count * 3);
+      
+      for (let i = 0; i < count; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 2;
+        positions[i * 3 + 1] = Math.random() * 3;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
+      }
+      
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      
+      const material = new THREE.PointsMaterial({
+        size: 0.1,
+        color: '#ff4500',
+        transparent: true,
+        opacity: Math.max(0.1, Math.min(1, fireIntensity)),
+        sizeAttenuation: true
+      });
 
-    return { fireGeometry: geometry, fireMaterial: material };
+      return { fireGeometry: geometry, fireMaterial: material };
+    } catch (error) {
+      console.error('Error creating fire effect:', error);
+      const fallbackGeometry = new THREE.BufferGeometry();
+      const fallbackMaterial = new THREE.PointsMaterial({ color: '#ff4500' });
+      return { fireGeometry: fallbackGeometry, fireMaterial: fallbackMaterial };
+    }
   }, [fireIntensity]);
 
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-    }
-    
-    if (fireRef.current?.geometry) {
-      const positionAttribute = fireRef.current.geometry.attributes.position;
-      if (positionAttribute?.array) {
+  const updateAnimation = useCallback((state: any) => {
+    try {
+      if (groupRef.current?.rotation) {
+        const time = state.clock?.elapsedTime || 0;
+        groupRef.current.rotation.y = Math.sin(time * 0.5) * 0.1;
+      }
+      
+      if (fireRef.current?.geometry?.attributes?.position) {
+        const positionAttribute = fireRef.current.geometry.attributes.position;
         const positions = positionAttribute.array as Float32Array;
         
         for (let i = 1; i < positions.length; i += 3) {
@@ -56,8 +64,12 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         
         positionAttribute.needsUpdate = true;
       }
+    } catch (error) {
+      console.error('Error in lion head animation:', error);
     }
-  });
+  }, []);
+
+  useFrame(updateAnimation);
 
   return (
     <group ref={groupRef} position={position}>
@@ -82,7 +94,9 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         );
       })}
       
-      <points ref={fireRef} geometry={fireGeometry} material={fireMaterial} />
+      {fireGeometry && fireMaterial && (
+        <points ref={fireRef} geometry={fireGeometry} material={fireMaterial} />
+      )}
     </group>
   );
 };

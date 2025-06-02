@@ -19,20 +19,30 @@ const ChimeraTheme: React.FC<ChimeraThemeProps> = ({
   intensity = 0.7, 
   mythosLevel = 75 
 }) => {
+  const handleCanvasError = (error: any) => {
+    console.error('Canvas error:', error);
+  };
+
   return (
     <div className="relative w-full h-full chimera-theme">
-      {/* 3D Background Canvas */}
+      {/* 3D Background Canvas with error handling */}
       <div className="absolute inset-0 z-0">
         <Canvas
           camera={{ position: [0, 5, 10], fov: 60 }}
           style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
+          onError={handleCanvasError}
+          gl={{ 
+            antialias: true,
+            alpha: false,
+            powerPreference: "high-performance"
+          }}
         >
           <Suspense fallback={null}>
             {/* Lighting */}
             <ambientLight intensity={0.3} color="#ffd700" />
             <directionalLight 
               position={[10, 10, 5]} 
-              intensity={intensity} 
+              intensity={Math.max(0.1, Math.min(1, intensity))} 
               color="#ff6b35" 
               castShadow 
             />
@@ -42,7 +52,7 @@ const ChimeraTheme: React.FC<ChimeraThemeProps> = ({
               color="#4a90e2" 
             />
 
-            {/* Mythological Elements */}
+            {/* Mythological Elements with error boundaries */}
             <LionHead position={[0, 2, -8]} fireIntensity={intensity} />
             <GoatTerrain mythosLevel={mythosLevel} />
             <SerpentTail />
