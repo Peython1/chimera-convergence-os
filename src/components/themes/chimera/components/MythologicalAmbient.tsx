@@ -2,6 +2,7 @@
 import React, { useRef, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { SafeThreeComponent } from './SafeThreeComponent';
 
 export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);
@@ -9,7 +10,6 @@ export const MythologicalAmbient: React.FC = () => {
 
   const { dustGeometry, dustMaterial, emberGeometry, emberMaterial } = useMemo(() => {
     try {
-      // Dust geometry
       const dustGeo = new THREE.BufferGeometry();
       const dustCount = 100;
       const dustPositions = new Float32Array(dustCount * 3);
@@ -20,7 +20,6 @@ export const MythologicalAmbient: React.FC = () => {
       }
       dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
 
-      // Ember geometry
       const emberGeo = new THREE.BufferGeometry();
       const emberCount = 50;
       const emberPositions = new Float32Array(emberCount * 3);
@@ -31,7 +30,6 @@ export const MythologicalAmbient: React.FC = () => {
       }
       emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPositions, 3));
 
-      // Materials
       const dustMat = new THREE.PointsMaterial({
         size: 0.02,
         color: '#ffd700',
@@ -67,7 +65,9 @@ export const MythologicalAmbient: React.FC = () => {
 
   const updateAnimation = useCallback((state: any) => {
     try {
-      const time = state.clock?.elapsedTime || 0;
+      if (!state?.clock) return;
+      
+      const time = state.clock.elapsedTime || 0;
       
       if (dustRef.current?.rotation) {
         dustRef.current.rotation.y = time * 0.05;
@@ -85,13 +85,15 @@ export const MythologicalAmbient: React.FC = () => {
   useFrame(updateAnimation);
 
   return (
-    <group>
-      {dustGeometry && dustMaterial && (
-        <points ref={dustRef} geometry={dustGeometry} material={dustMaterial} />
-      )}
-      {emberGeometry && emberMaterial && (
-        <points ref={emberRef} geometry={emberGeometry} material={emberMaterial} />
-      )}
-    </group>
+    <SafeThreeComponent>
+      <group>
+        {dustGeometry && dustMaterial && (
+          <points ref={dustRef} geometry={dustGeometry} material={dustMaterial} />
+        )}
+        {emberGeometry && emberMaterial && (
+          <points ref={emberRef} geometry={emberGeometry} material={emberMaterial} />
+        )}
+      </group>
+    </SafeThreeComponent>
   );
 };

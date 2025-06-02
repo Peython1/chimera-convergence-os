@@ -3,6 +3,7 @@ import React, { useRef, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Sphere, Box } from '@react-three/drei';
 import * as THREE from 'three';
+import { SafeThreeComponent } from './SafeThreeComponent';
 
 interface LionHeadProps {
   position: [number, number, number];
@@ -31,7 +32,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
         size: 0.1,
         color: '#ff4500',
         transparent: true,
-        opacity: Math.max(0.1, Math.min(1, fireIntensity)),
+        opacity: Math.max(0.1, Math.min(1, fireIntensity || 0.7)),
         sizeAttenuation: true
       });
 
@@ -46,23 +47,25 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
 
   const updateAnimation = useCallback((state: any) => {
     try {
-      if (groupRef.current?.rotation) {
-        const time = state.clock?.elapsedTime || 0;
+      if (groupRef.current?.rotation && state?.clock) {
+        const time = state.clock.elapsedTime || 0;
         groupRef.current.rotation.y = Math.sin(time * 0.5) * 0.1;
       }
       
       if (fireRef.current?.geometry?.attributes?.position) {
         const positionAttribute = fireRef.current.geometry.attributes.position;
-        const positions = positionAttribute.array as Float32Array;
-        
-        for (let i = 1; i < positions.length; i += 3) {
-          positions[i] += 0.02;
-          if (positions[i] > 3) {
-            positions[i] = 0;
+        if (positionAttribute?.array) {
+          const positions = positionAttribute.array as Float32Array;
+          
+          for (let i = 1; i < positions.length; i += 3) {
+            positions[i] += 0.02;
+            if (positions[i] > 3) {
+              positions[i] = 0;
+            }
           }
+          
+          positionAttribute.needsUpdate = true;
         }
-        
-        positionAttribute.needsUpdate = true;
       }
     } catch (error) {
       console.error('Error in lion head animation:', error);
@@ -72,31 +75,33 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
   useFrame(updateAnimation);
 
   return (
-    <group ref={groupRef} position={position}>
-      <Sphere args={[1.5, 32, 32]} position={[0, 0, 0]}>
-        <meshPhongMaterial color="#ffd700" shininess={100} />
-      </Sphere>
-      
-      {Array.from({ length: 12 }, (_, i) => {
-        const angle = (i / 12) * Math.PI * 2;
-        const x = Math.cos(angle) * 1.8;
-        const z = Math.sin(angle) * 1.8;
+    <SafeThreeComponent>
+      <group ref={groupRef} position={position}>
+        <Sphere args={[1.5, 32, 32]} position={[0, 0, 0]}>
+          <meshPhongMaterial color="#ffd700" shininess={100} />
+        </Sphere>
         
-        return (
-          <Box 
-            key={i}
-            args={[0.3, 0.8, 0.3]} 
-            position={[x, 0.2, z]}
-            rotation={[0, angle, 0]}
-          >
-            <meshPhongMaterial color="#ff8c42" />
-          </Box>
-        );
-      })}
-      
-      {fireGeometry && fireMaterial && (
-        <points ref={fireRef} geometry={fireGeometry} material={fireMaterial} />
-      )}
-    </group>
+        {Array.from({ length: 12 }, (_, i) => {
+          const angle = (i / 12) * Math.PI * 2;
+          const x = Math.cos(angle) * 1.8;
+          const z = Math.sin(angle) * 1.8;
+          
+          return (
+            <Box 
+              key={i}
+              args={[0.3, 0.8, 0.3]} 
+              position={[x, 0.2, z]}
+              rotation={[0, angle, 0]}
+            >
+              <meshPhongMaterial color="#ff8c42" />
+            </Box>
+          );
+        })}
+        
+        {fireGeometry && fireMaterial && (
+          <points ref={fireRef} geometry={fireGeometry} material={fireMaterial} />
+        )}
+      </group>
+    </SafeThreeComponent>
   );
 };

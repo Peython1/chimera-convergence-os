@@ -3,6 +3,7 @@ import React, { useRef, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
+import { SafeThreeComponent } from './SafeThreeComponent';
 
 export const SerpentTail: React.FC = () => {
   const groupRef = useRef<THREE.Group>(null);
@@ -25,18 +26,18 @@ export const SerpentTail: React.FC = () => {
   }, []);
 
   const updateAnimation = useCallback((state: any) => {
-    if (!groupRef.current?.children) return;
+    if (!groupRef.current?.children || !state?.clock) return;
     
     try {
       const children = groupRef.current.children;
+      const time = state.clock.elapsedTime || 0;
       
       children.forEach((child, i) => {
-        if (!child?.position || !child?.rotation) return;
-        
-        const time = state.clock?.elapsedTime || 0;
-        child.position.x = Math.sin(time + i * 0.5) * 2;
-        child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
-        child.rotation.z = Math.sin(time + i * 0.2) * 0.2;
+        if (child?.position && child?.rotation) {
+          child.position.x = Math.sin(time + i * 0.5) * 2;
+          child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
+          child.rotation.z = Math.sin(time + i * 0.2) * 0.2;
+        }
       });
     } catch (error) {
       console.error('Error in serpent animation:', error);
@@ -50,14 +51,16 @@ export const SerpentTail: React.FC = () => {
   }
 
   return (
-    <group ref={groupRef}>
-      {serpentSegments.map((segment) => (
-        <group key={segment.id} position={segment.position}>
-          <Cylinder args={[segment.scale, segment.scale * 0.8, 0.5, 8]}>
-            <meshPhongMaterial color="#2d5a27" />
-          </Cylinder>
-        </group>
-      ))}
-    </group>
+    <SafeThreeComponent>
+      <group ref={groupRef}>
+        {serpentSegments.map((segment) => (
+          <group key={segment.id} position={segment.position}>
+            <Cylinder args={[segment.scale, segment.scale * 0.8, 0.5, 8]}>
+              <meshPhongMaterial color="#2d5a27" />
+            </Cylinder>
+          </group>
+        ))}
+      </group>
+    </SafeThreeComponent>
   );
 };

@@ -3,18 +3,21 @@ import React, { useRef, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Plane, Box } from '@react-three/drei';
 import * as THREE from 'three';
+import { SafeThreeComponent } from './SafeThreeComponent';
 
 interface GoatTerrainProps {
   mythosLevel: number;
 }
 
-export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
+export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel = 75 }) => {
   const terrainRef = useRef<THREE.Mesh>(null);
   const hornsRef = useRef<THREE.Group>(null);
 
   const updateAnimation = useCallback((state: any) => {
     try {
-      const time = state.clock?.elapsedTime || 0;
+      if (!state?.clock) return;
+      
+      const time = state.clock.elapsedTime || 0;
       
       if (terrainRef.current?.position) {
         terrainRef.current.position.y = Math.sin(time * 0.3) * 0.1;
@@ -46,39 +49,41 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
   }, [mythosLevel]);
 
   return (
-    <group>
-      <Plane 
-        ref={terrainRef}
-        args={[40, 40, 16, 16]} 
-        rotation={[-Math.PI / 2, 0, 0]} 
-        position={[0, -3, 0]}
-      >
-        <meshPhongMaterial 
-          color="#8b7355"
-          transparent
-          opacity={0.8}
-        />
-      </Plane>
-      
-      <group ref={hornsRef}>
-        {hornPositions.map((horn, i) => (
-          <group key={i} position={[horn.x, -1, horn.z]}>
-            <Box 
-              args={[0.15, 2.5, 0.15]} 
-              rotation={[0, horn.angle, Math.PI / 8]}
-            >
-              <meshPhongMaterial color="#654321" />
-            </Box>
-            <Box 
-              args={[0.1, 2, 0.1]} 
-              position={[0, 0.4, 0]}
-              rotation={[0, horn.angle, Math.PI / 6]}
-            >
-              <meshPhongMaterial color="#8b7355" />
-            </Box>
-          </group>
-        ))}
+    <SafeThreeComponent>
+      <group>
+        <Plane 
+          ref={terrainRef}
+          args={[40, 40, 16, 16]} 
+          rotation={[-Math.PI / 2, 0, 0]} 
+          position={[0, -3, 0]}
+        >
+          <meshPhongMaterial 
+            color="#8b7355"
+            transparent
+            opacity={0.8}
+          />
+        </Plane>
+        
+        <group ref={hornsRef}>
+          {hornPositions.map((horn, i) => (
+            <group key={i} position={[horn.x, -1, horn.z]}>
+              <Box 
+                args={[0.15, 2.5, 0.15]} 
+                rotation={[0, horn.angle, Math.PI / 8]}
+              >
+                <meshPhongMaterial color="#654321" />
+              </Box>
+              <Box 
+                args={[0.1, 2, 0.1]} 
+                position={[0, 0.4, 0]}
+                rotation={[0, horn.angle, Math.PI / 6]}
+              >
+                <meshPhongMaterial color="#8b7355" />
+              </Box>
+            </group>
+          ))}
+        </group>
       </group>
-    </group>
+    </SafeThreeComponent>
   );
 };
