@@ -15,43 +15,38 @@ interface ChimeraThemeProps {
   mythosLevel?: number;
 }
 
+const LoadingFallback = () => (
+  <group>
+    <mesh position={[0, 0, 0]}>
+      <boxGeometry args={[0.1, 0.1, 0.1]} />
+      <meshBasicMaterial color="#444444" transparent opacity={0.1} />
+    </mesh>
+  </group>
+);
+
 const ChimeraTheme: React.FC<ChimeraThemeProps> = ({ 
   children, 
   intensity = 0.7, 
   mythosLevel = 75 
 }) => {
-  const handleCanvasError = (error: any) => {
-    console.error('Canvas error:', error);
-  };
-
   const safeIntensity = Math.max(0.1, Math.min(1, intensity));
   const safeMythosLevel = Math.max(0, Math.min(100, mythosLevel));
 
-  const FallbackComponent = () => (
-    <div className="absolute inset-0 z-0 bg-gradient-to-br from-purple-900 to-blue-900">
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="text-center text-white">
-          <div className="animate-pulse text-lg">Loading Chimera Theme...</div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="relative w-full h-full chimera-theme">
-      <ChimeraErrorBoundary fallback={<FallbackComponent />}>
+      <ChimeraErrorBoundary>
         <div className="absolute inset-0 z-0">
           <Canvas
             camera={{ position: [0, 5, 10], fov: 60 }}
             style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
-            onError={handleCanvasError}
             gl={{ 
               antialias: true,
               alpha: false,
               powerPreference: "high-performance"
             }}
+            dpr={[1, 2]}
           >
-            <Suspense fallback={null}>
+            <Suspense fallback={<LoadingFallback />}>
               <ambientLight intensity={0.3} color="#ffd700" />
               <directionalLight 
                 position={[10, 10, 5]} 

@@ -31,9 +31,9 @@ export class ChimeraErrorBoundary extends Component<Props, State> {
       return this.props.fallback || (
         <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-purple-900 to-blue-900">
           <div className="text-center text-white p-8">
-            <h2 className="text-xl font-bold mb-4">Chimera Theme Loading...</h2>
-            <div className="animate-pulse text-sm opacity-70">
-              Initializing mythological elements
+            <h2 className="text-xl font-bold mb-4">Theme Error</h2>
+            <div className="text-sm opacity-70">
+              Fallback to basic theme
             </div>
           </div>
         </div>
