@@ -13,11 +13,11 @@ export const GoatTerrain: React.FC<GoatTerrainProps> = ({ mythosLevel }) => {
   const hornsRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
-    if (terrainRef.current) {
+    if (terrainRef.current?.position) {
       terrainRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
     }
     
-    if (hornsRef.current) {
+    if (hornsRef.current?.rotation) {
       hornsRef.current.rotation.y = state.clock.elapsedTime * 0.2;
     }
   });

@@ -7,50 +7,52 @@ export const MythologicalAmbient: React.FC = () => {
   const dustRef = useRef<THREE.Points>(null);
   const emberRef = useRef<THREE.Points>(null);
 
-  const dustGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const count = 100;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 30;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+  const { dustGeometry, dustMaterial, emberGeometry, emberMaterial } = useMemo(() => {
+    // Dust geometry
+    const dustGeo = new THREE.BufferGeometry();
+    const dustCount = 100;
+    const dustPositions = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 30;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
     }
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geometry;
-  }, []);
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
 
-  const emberGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const count = 50;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 1] = Math.random() * 10;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
+    // Ember geometry
+    const emberGeo = new THREE.BufferGeometry();
+    const emberCount = 50;
+    const emberPositions = new Float32Array(emberCount * 3);
+    for (let i = 0; i < emberCount; i++) {
+      emberPositions[i * 3] = (Math.random() - 0.5) * 15;
+      emberPositions[i * 3 + 1] = Math.random() * 10;
+      emberPositions[i * 3 + 2] = (Math.random() - 0.5) * 15;
     }
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geometry;
-  }, []);
+    emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPositions, 3));
 
-  const dustMaterial = useMemo(() => {
-    return new THREE.PointsMaterial({
+    // Materials
+    const dustMat = new THREE.PointsMaterial({
       size: 0.02,
       color: '#ffd700',
       transparent: true,
       opacity: 0.6,
       sizeAttenuation: true
     });
-  }, []);
 
-  const emberMaterial = useMemo(() => {
-    return new THREE.PointsMaterial({
+    const emberMat = new THREE.PointsMaterial({
       size: 0.05,
       color: '#ff6b35',
       transparent: true,
       opacity: 0.8,
       sizeAttenuation: true
     });
+
+    return {
+      dustGeometry: dustGeo,
+      dustMaterial: dustMat,
+      emberGeometry: emberGeo,
+      emberMaterial: emberMat
+    };
   }, []);
 
   useFrame((state) => {

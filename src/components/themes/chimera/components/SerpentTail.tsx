@@ -20,25 +20,28 @@ export const SerpentTail: React.FC = () => {
   }, []);
 
   useFrame((state) => {
-    if (groupRef.current?.children) {
-      groupRef.current.children.forEach((child, i) => {
+    if (!groupRef.current) return;
+    
+    const children = groupRef.current.children;
+    if (!children || children.length === 0) return;
+
+    children.forEach((child, i) => {
+      if (child && child.position) {
         const time = state.clock.elapsedTime;
-        if (child.position) {
-          child.position.x = Math.sin(time + i * 0.5) * 2;
-          child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
+        child.position.x = Math.sin(time + i * 0.5) * 2;
+        child.position.y = -2 + Math.cos(time * 0.5 + i * 0.3) * 0.5;
+        if (child.rotation) {
           child.rotation.z = Math.sin(time + i * 0.2) * 0.2;
         }
-      });
-    }
+      }
+    });
   });
 
   return (
     <group ref={groupRef}>
       {serpentSegments.map((segment) => (
         <group key={segment.id} position={segment.position}>
-          <Cylinder
-            args={[segment.scale, segment.scale * 0.8, 0.5, 8]}
-          >
+          <Cylinder args={[segment.scale, segment.scale * 0.8, 0.5, 8]}>
             <meshPhongMaterial color="#2d5a27" />
           </Cylinder>
         </group>

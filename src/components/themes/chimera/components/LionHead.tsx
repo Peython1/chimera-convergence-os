@@ -13,7 +13,7 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
   const groupRef = useRef<THREE.Group>(null);
   const fireRef = useRef<THREE.Points>(null);
 
-  const fireGeometry = useMemo(() => {
+  const { fireGeometry, fireMaterial } = useMemo(() => {
     const geometry = new THREE.BufferGeometry();
     const count = 150;
     const positions = new Float32Array(count * 3);
@@ -25,17 +25,16 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
     }
     
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geometry;
-  }, []);
-
-  const fireMaterial = useMemo(() => {
-    return new THREE.PointsMaterial({
+    
+    const material = new THREE.PointsMaterial({
       size: 0.1,
       color: '#ff4500',
       transparent: true,
       opacity: fireIntensity,
       sizeAttenuation: true
     });
+
+    return { fireGeometry: geometry, fireMaterial: material };
   }, [fireIntensity]);
 
   useFrame((state) => {
@@ -43,9 +42,9 @@ export const LionHead: React.FC<LionHeadProps> = ({ position, fireIntensity }) =
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
     
-    if (fireRef.current?.geometry?.attributes?.position) {
+    if (fireRef.current?.geometry) {
       const positionAttribute = fireRef.current.geometry.attributes.position;
-      if (positionAttribute.array) {
+      if (positionAttribute?.array) {
         const positions = positionAttribute.array as Float32Array;
         
         for (let i = 1; i < positions.length; i += 3) {
