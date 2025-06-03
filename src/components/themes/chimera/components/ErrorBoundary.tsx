@@ -29,14 +29,12 @@ export class ChimeraErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-purple-900 to-blue-900">
-          <div className="text-center text-white p-8">
-            <h2 className="text-xl font-bold mb-4">Theme Error</h2>
-            <div className="text-sm opacity-70">
-              Fallback to basic theme
-            </div>
-          </div>
-        </div>
+        <group>
+          <mesh position={[0, 0, 0]}>
+            <boxGeometry args={[0.5, 0.5, 0.5]} />
+            <meshBasicMaterial color="#ff0000" transparent opacity={0.3} />
+          </mesh>
+        </group>
       );
     }
 

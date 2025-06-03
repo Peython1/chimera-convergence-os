@@ -11,6 +11,7 @@ export const SafeThreeComponent: React.FC<SafeThreeComponentProps> = ({
   children, 
   fallback 
 }) => {
+  // Three.js compatible fallback - must be Three.js objects, not HTML
   const defaultFallback = (
     <group>
       <mesh position={[0, 0, 0]}>
@@ -20,9 +21,19 @@ export const SafeThreeComponent: React.FC<SafeThreeComponentProps> = ({
     </group>
   );
 
+  // Three.js compatible error fallback
+  const errorFallback = (
+    <group>
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[0.5, 0.5, 0.5]} />
+        <meshBasicMaterial color="#ff0000" transparent opacity={0.3} />
+      </mesh>
+    </group>
+  );
+
   return (
-    <ChimeraErrorBoundary fallback={fallback}>
-      <Suspense fallback={defaultFallback}>
+    <ChimeraErrorBoundary fallback={errorFallback}>
+      <Suspense fallback={fallback || defaultFallback}>
         {children}
       </Suspense>
     </ChimeraErrorBoundary>
