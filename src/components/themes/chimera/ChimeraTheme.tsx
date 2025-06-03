@@ -7,7 +7,6 @@ import { GoatTerrain } from './components/GoatTerrain';
 import { SerpentTail } from './components/SerpentTail';
 import { ChimeraCursor } from './components/ChimeraCursor';
 import { MythologicalAmbient } from './components/MythologicalAmbient';
-import { ChimeraErrorBoundary } from './components/ErrorBoundary';
 
 interface ChimeraThemeProps {
   children: React.ReactNode;
@@ -34,51 +33,49 @@ const ChimeraTheme: React.FC<ChimeraThemeProps> = ({
 
   return (
     <div className="relative w-full h-full chimera-theme">
-      <ChimeraErrorBoundary>
-        <div className="absolute inset-0 z-0">
-          <Canvas
-            camera={{ position: [0, 5, 10], fov: 60 }}
-            style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
-            gl={{ 
-              antialias: true,
-              alpha: false,
-              powerPreference: "high-performance"
-            }}
-            dpr={[1, 2]}
-          >
-            <Suspense fallback={<LoadingFallback />}>
-              <ambientLight intensity={0.3} color="#ffd700" />
-              <directionalLight 
-                position={[10, 10, 5]} 
-                intensity={safeIntensity} 
-                color="#ff6b35" 
-                castShadow 
-              />
-              <pointLight 
-                position={[-10, -10, -5]} 
-                intensity={0.5} 
-                color="#4a90e2" 
-              />
+      <div className="absolute inset-0 z-0">
+        <Canvas
+          camera={{ position: [0, 5, 10], fov: 60 }}
+          style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}
+          gl={{ 
+            antialias: true,
+            alpha: false,
+            powerPreference: "high-performance"
+          }}
+          dpr={[1, 2]}
+        >
+          <Suspense fallback={<LoadingFallback />}>
+            <ambientLight intensity={0.3} color="#ffd700" />
+            <directionalLight 
+              position={[10, 10, 5]} 
+              intensity={safeIntensity} 
+              color="#ff6b35" 
+              castShadow 
+            />
+            <pointLight 
+              position={[-10, -10, -5]} 
+              intensity={0.5} 
+              color="#4a90e2" 
+            />
 
-              <LionHead position={[0, 2, -8]} fireIntensity={safeIntensity} />
-              <GoatTerrain mythosLevel={safeMythosLevel} />
-              <SerpentTail />
-              
-              <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
-              <Environment preset="night" />
-              <MythologicalAmbient />
-              
-              <OrbitControls 
-                enableZoom={false} 
-                enablePan={false} 
-                enableRotate={true}
-                autoRotate={true}
-                autoRotateSpeed={0.5}
-              />
-            </Suspense>
-          </Canvas>
-        </div>
-      </ChimeraErrorBoundary>
+            <LionHead position={[0, 2, -8]} fireIntensity={safeIntensity} />
+            <GoatTerrain mythosLevel={safeMythosLevel} />
+            <SerpentTail />
+            
+            <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
+            <Environment preset="night" />
+            <MythologicalAmbient />
+            
+            <OrbitControls 
+              enableZoom={false} 
+              enablePan={false} 
+              enableRotate={true}
+              autoRotate={true}
+              autoRotateSpeed={0.5}
+            />
+          </Suspense>
+        </Canvas>
+      </div>
 
       <div className="relative z-10 w-full h-full">
         {children}
