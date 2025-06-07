@@ -1,152 +1,118 @@
-
-import React from 'react';
-import { getUuid } from '../../utils/uuidHelper';
-import { 
-  FolderOpen, 
-  Terminal as TerminalIcon, 
-  Code, 
-  Monitor, 
-  Settings as SettingsIcon,
-  Wifi,
-  FileText
-} from 'lucide-react';
-import WifiManager from '../wifi/WifiManager';
-import SystemMonitor from '../system/SystemMonitor';
-import Terminal from '../system/Terminal';
 import { WindowData } from './types';
+import { generateId } from '@/lib/utils';
+import Browser from '../browser/Browser';
+import Terminal from '../terminal/Terminal';
+import SystemMonitor from '../system/SystemMonitor';
+import Settings from '../settings/Settings';
+import FileExplorer from '../file_explorer/FileExplorer';
+import Store from '../store/Store';
+import WifiManager from '../wifi/WifiManager';
+import React from 'react';
+import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
-  // Check for existing window of this type
-  const existingWindowOfType = existingWindows.find(window => 
-    window.title.toLowerCase().includes(windowType.toLowerCase())
-  );
-  
-  if (existingWindowOfType) {
-    // If window already exists, return null - caller should focus the existing one
-    return null;
+  const nextZIndex = existingWindows.length > 0
+    ? existingWindows.reduce((max, window) => Math.max(max, window.zIndex || 0), 0) + 1
+    : 1;
+
+  if (windowType === 'browser' || windowType === 'Browser') {
+    return {
+      id: generateId(),
+      title: 'Browser',
+      content: 'browser',
+      position: { x: 50, y: 50 },
+      size: { width: 800, height: 600 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'terminal' || windowType === 'Terminal') {
+    return {
+      id: generateId(),
+      title: 'Terminal',
+      content: 'terminal',
+      position: { x: 75, y: 75 },
+      size: { width: 600, height: 400 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'systemMonitor' || windowType === 'monitor') {
+    return {
+      id: generateId(),
+      title: 'System Monitor',
+      content: 'systemMonitor',
+      position: { x: 100, y: 100 },
+      size: { width: 700, height: 500 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'settings' || windowType === 'Settings') {
+    return {
+      id: generateId(),
+      title: 'Settings',
+      content: 'settings',
+      position: { x: 125, y: 125 },
+      size: { width: 650, height: 550 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'fileExplorer' || windowType === 'explorer') {
+    return {
+      id: generateId(),
+      title: 'File Explorer',
+      content: 'fileExplorer',
+      position: { x: 150, y: 150 },
+      size: { width: 850, height: 650 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'store' || windowType === 'Store') {
+    return {
+      id: generateId(),
+      title: 'App Store',
+      content: 'store',
+      position: { x: 175, y: 175 },
+      size: { width: 750, height: 600 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'wifiManager' || windowType === 'wifi') {
+    return {
+      id: generateId(),
+      title: 'WiFi Manager',
+      content: 'wifiManager',
+      position: { x: 200, y: 200 },
+      size: { width: 600, height: 500 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'systemDiagnostics' || windowType === 'diagnostics') {
+    return {
+      id: generateId(),
+      title: 'System Diagnostics',
+      content: 'systemDiagnostics',
+      position: { x: 100, y: 100 },
+      size: { width: 800, height: 600 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
   }
-  
-  // Calculate offset for cascade positioning
-  const windowCount = existingWindows.length;
-  const offsetX = (windowCount * 20) % 200;
-  const offsetY = (windowCount * 20) % 200;
-  
-  // Default window properties
-  const defaultProps = {
-    id: getUuid(),
-    position: { x: 100 + offsetX, y: 100 + offsetY },
-    size: { width: 800, height: 600 },
-    isMinimized: false,
-    isMaximized: false,
-    isActive: true
-  };
-  
-  // Return window configuration based on type
-  switch (windowType.toLowerCase()) {
-    case 'fileexplorer':
-      return {
-        ...defaultProps,
-        title: 'File Explorer',
-        icon: <FolderOpen size={16} />,
-        content: (
-          <div className="p-4">
-            <h2 className="text-xl font-bold">File Explorer</h2>
-            <p className="mt-2">This is a placeholder for the file explorer.</p>
-          </div>
-        )
-      };
-      
-    case 'terminal':
-      return {
-        ...defaultProps,
-        title: 'Terminal',
-        icon: <TerminalIcon size={16} />,
-        content: <Terminal />
-      };
-      
-    case 'store':
-      return {
-        ...defaultProps,
-        title: 'App Store',
-        icon: <Code size={16} />,
-        content: (
-          <div className="p-4">
-            <h2 className="text-xl font-bold">App Store</h2>
-            <p className="mt-2">Browse and install applications.</p>
-          </div>
-        )
-      };
-      
-    case 'systemmonitor':
-      return {
-        ...defaultProps,
-        title: 'System Monitor',
-        icon: <Monitor size={16} />,
-        content: <SystemMonitor />
-      };
-      
-    case 'settings':
-      return {
-        ...defaultProps,
-        title: 'Settings',
-        icon: <SettingsIcon size={16} />,
-        content: (
-          <div className="p-4">
-            <h2 className="text-xl font-bold">Settings</h2>
-            <p className="mt-2">Configure system settings.</p>
-          </div>
-        )
-      };
-      
-    case 'wifimanager':
-      return {
-        ...defaultProps,
-        title: 'Wi-Fi Manager',
-        icon: <Wifi size={16} />,
-        content: <WifiManager />
-      };
-    
-    case 'projectplan':
-      return {
-        ...defaultProps,
-        title: 'ChimeraOS Project Plan',
-        icon: <FileText size={16} />,
-        content: (
-          <iframe 
-            src="/project-plan" 
-            title="Project Plan" 
-            className="w-full h-full border-none" 
-          />
-        ),
-        size: { width: 900, height: 700 }
-      };
-      
-    case 'implementation':
-      return {
-        ...defaultProps,
-        title: 'ChimeraOS Implementation',
-        icon: <Code size={16} />,
-        content: (
-          <iframe 
-            src="/implementation" 
-            title="Implementation Details" 
-            className="w-full h-full border-none" 
-          />
-        ),
-        size: { width: 950, height: 700 }
-      };
-      
-    default:
-      return {
-        ...defaultProps,
-        title: 'New Window',
-        icon: <Code size={16} />,
-        content: (
-          <div className="p-4">
-            <h2 className="text-xl font-bold">Unknown Window Type</h2>
-            <p className="mt-2">Window type {windowType} is not recognized.</p>
-          </div>
-        )
-      };
-  }
+
+  console.warn('Unknown window type:', windowType);
+  return null;
 };

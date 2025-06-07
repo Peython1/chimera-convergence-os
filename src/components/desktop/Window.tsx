@@ -3,6 +3,7 @@ import { motion, useDragControls } from 'framer-motion';
 import { WindowData } from './types';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 
 interface WindowProps {
   data: WindowData;
@@ -55,6 +56,13 @@ const Window: React.FC<WindowProps> = ({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+  
+  let content;
+  if (data.content === 'systemDiagnostics') {
+    content = <SystemDiagnostics onCreateWindow={(type) => console.log('Create window:', type)} />;
+  } else {
+    content = data.content;
+  }
   
   return (
     <motion.div
@@ -130,7 +138,7 @@ const Window: React.FC<WindowProps> = ({
       
       {/* Content area */}
       <div className="flex-1 bg-white overflow-hidden">
-        {data.content}
+        {content}
       </div>
       
       {/* Resize handle */}

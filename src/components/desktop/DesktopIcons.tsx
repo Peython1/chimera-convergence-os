@@ -14,6 +14,7 @@ const DesktopIcons: React.FC<DesktopIconsProps> = ({ onCreateWindow }) => {
     { icon: <Settings size={28} className="text-white" />, label: "Settings", type: "settings" },
     { icon: <Store size={28} className="text-white" />, label: "App Store", type: "store" },
     { icon: <MonitorPlay size={28} className="text-white" />, label: "System Monitor", type: "systemmonitor" },
+    { icon: <CheckCircle size={28} className="text-white" />, label: "Diagnostics", type: "systemDiagnostics" },
   ];
 
   return (
