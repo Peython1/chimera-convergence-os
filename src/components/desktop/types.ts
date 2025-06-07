@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export interface WindowData {
@@ -10,7 +9,8 @@ export interface WindowData {
   isMinimized: boolean;
   isMaximized: boolean;
   isActive: boolean;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  zIndex?: number;
 }
 
 export type Network = {
