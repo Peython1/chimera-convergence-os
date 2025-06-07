@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { DesktopIcon } from './DesktopIcon';
-import { Terminal, Folder, Settings, Store, MonitorPlay } from 'lucide-react';
+import { Terminal, Folder, Settings, Store, MonitorPlay, CheckCircle } from 'lucide-react';
 
 interface DesktopIconsProps {
   onCreateWindow: (windowType: string) => void;

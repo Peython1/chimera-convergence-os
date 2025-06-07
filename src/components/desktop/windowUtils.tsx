@@ -1,12 +1,6 @@
+
 import { WindowData } from './types';
 import { generateId } from '@/lib/utils';
-import Browser from '../browser/Browser';
-import Terminal from '../terminal/Terminal';
-import SystemMonitor from '../system/SystemMonitor';
-import Settings from '../settings/Settings';
-import FileExplorer from '../file_explorer/FileExplorer';
-import Store from '../store/Store';
-import WifiManager from '../wifi/WifiManager';
 import React from 'react';
 import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 
