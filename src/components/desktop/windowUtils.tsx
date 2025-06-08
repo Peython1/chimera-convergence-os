@@ -1,8 +1,8 @@
-
 import { WindowData } from './types';
 import { generateId } from '@/lib/utils';
 import React from 'react';
 import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
+import FileExplorer from '../fileexplorer/FileExplorer';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   const nextZIndex = existingWindows.length > 0
@@ -57,11 +57,11 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
       isActive: true,
       zIndex: nextZIndex
     };
-  } else if (windowType === 'fileExplorer' || windowType === 'explorer') {
+  } else if (windowType === 'fileExplorer' || windowType === 'fileexplorer' || windowType === 'explorer') {
     return {
       id: generateId(),
       title: 'File Explorer',
-      content: 'fileExplorer',
+      content: <FileExplorer />,
       position: { x: 150, y: 150 },
       size: { width: 850, height: 650 },
       isMinimized: false,
@@ -97,7 +97,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'System Diagnostics',
-      content: 'systemDiagnostics',
+      content: <SystemDiagnostics onCreateWindow={() => {}} />,
       position: { x: 100, y: 100 },
       size: { width: 800, height: 600 },
       isMinimized: false,

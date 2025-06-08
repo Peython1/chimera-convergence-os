@@ -60,6 +60,8 @@ const Window: React.FC<WindowProps> = ({
   let content;
   if (data.content === 'systemDiagnostics') {
     content = <SystemDiagnostics onCreateWindow={(type) => console.log('Create window:', type)} />;
+  } else if (React.isValidElement(data.content)) {
+    content = data.content;
   } else {
     content = data.content;
   }
@@ -74,6 +76,7 @@ const Window: React.FC<WindowProps> = ({
         height: data.isMaximized ? 'calc(100vh - 56px)' : data.size.height,
         top: data.isMaximized ? 0 : data.position.y,
         left: data.isMaximized ? 0 : data.position.x,
+        zIndex: data.zIndex || 1,
       }}
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
