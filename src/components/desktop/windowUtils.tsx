@@ -5,6 +5,7 @@ import React from 'react';
 import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 import FileExplorer from '../fileexplorer/FileExplorer';
 import SettingsPanel from '../settings/SettingsPanel';
+import AppStore from '../store/AppStore';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   const nextZIndex = existingWindows.length > 0
@@ -75,9 +76,9 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'App Store',
-      content: 'store',
+      content: <AppStore />,
       position: { x: 175, y: 175 },
-      size: { width: 750, height: 600 },
+      size: { width: 900, height: 700 },
       isMinimized: false,
       isMaximized: false,
       isActive: true,
