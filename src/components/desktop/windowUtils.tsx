@@ -6,6 +6,8 @@ import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 import FileExplorer from '../fileexplorer/FileExplorer';
 import SettingsPanel from '../settings/SettingsPanel';
 import AppStore from '../store/AppStore';
+import Browser from '../browser/Browser';
+import NotificationCenter from '../notifications/NotificationCenter';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   const nextZIndex = existingWindows.length > 0
@@ -16,9 +18,21 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'Browser',
-      content: 'browser',
+      content: <Browser />,
       position: { x: 50, y: 50 },
-      size: { width: 800, height: 600 },
+      size: { width: 900, height: 650 },
+      isMinimized: false,
+      isMaximized: false,
+      isActive: true,
+      zIndex: nextZIndex
+    };
+  } else if (windowType === 'notifications' || windowType === 'Notifications') {
+    return {
+      id: generateId(),
+      title: 'Notification Center',
+      content: <NotificationCenter />,
+      position: { x: 200, y: 100 },
+      size: { width: 600, height: 500 },
       isMinimized: false,
       isMaximized: false,
       isActive: true,

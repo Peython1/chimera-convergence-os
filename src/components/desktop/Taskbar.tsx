@@ -73,7 +73,9 @@ const Taskbar: React.FC<TaskbarProps> = ({
         {[
           { icon: <Folder size={18} />, type: 'fileExplorer' },
           { icon: <Terminal size={18} />, type: 'terminal' },
+          { icon: <LayoutGrid size={18} />, type: 'browser' },
           { icon: <Store size={18} />, type: 'store' },
+          { icon: <Bell size={18} />, type: 'notifications' },
           { icon: <Monitor size={18} />, type: 'systemMonitor' },
           { icon: <Settings size={18} />, type: 'settings' },
           { icon: <Wifi size={18} />, type: 'wifiManager' }
@@ -174,12 +176,12 @@ const Taskbar: React.FC<TaskbarProps> = ({
                 <div className="text-xs uppercase text-gray-500 font-semibold mb-2">Pinned</div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
+                    { name: 'Browser', icon: <LayoutGrid size={24} />, type: 'browser' },
                     { name: 'Terminal', icon: <Terminal size={24} />, type: 'terminal' },
                     { name: 'File Explorer', icon: <Folder size={24} />, type: 'fileExplorer' },
                     { name: 'Store', icon: <Store size={24} />, type: 'store' },
+                    { name: 'Notifications', icon: <Bell size={24} />, type: 'notifications' },
                     { name: 'Settings', icon: <Settings size={24} />, type: 'settings' },
-                    { name: 'Browser', icon: <LayoutGrid size={24} />, type: 'browser' },
-                    { name: 'Monitor', icon: <Monitor size={24} />, type: 'systemMonitor' },
                   ].map((app, index) => (
                     <div
                       key={index}
