@@ -153,7 +153,7 @@ const FileExplorer: React.FC = () => {
       {/* Breadcrumb */}
       <div className="flex items-center p-2 text-sm text-gray-600 border-b">
         {getCurrentPath().map((item, index) => (
-          <React.Fragment key={item.id}>
+          <div key={item.id} className="flex items-center">
             {index > 0 && <span className="mx-1">/</span>}
             <button
               onClick={() => navigateToPath(item.id)}
@@ -161,7 +161,7 @@ const FileExplorer: React.FC = () => {
             >
               {item.name}
             </button>
-          </React.Fragment>
+          </div>
         ))}
       </div>
 

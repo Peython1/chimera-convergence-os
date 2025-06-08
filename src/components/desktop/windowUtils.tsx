@@ -1,8 +1,10 @@
+
 import { WindowData } from './types';
 import { generateId } from '@/lib/utils';
 import React from 'react';
 import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 import FileExplorer from '../fileexplorer/FileExplorer';
+import SettingsPanel from '../settings/SettingsPanel';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   const nextZIndex = existingWindows.length > 0
@@ -49,9 +51,9 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'Settings',
-      content: 'settings',
+      content: <SettingsPanel />,
       position: { x: 125, y: 125 },
-      size: { width: 650, height: 550 },
+      size: { width: 750, height: 600 },
       isMinimized: false,
       isMaximized: false,
       isActive: true,
