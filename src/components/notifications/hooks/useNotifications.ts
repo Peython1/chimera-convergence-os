@@ -1,6 +1,5 @@
-
 import { useState, useCallback, useEffect } from 'react';
-import { Notification, NotificationSettings } from '../types';
+import type { Notification, NotificationSettings } from '../types';
 import { generateId } from '@/lib/utils';
 
 const defaultSettings: NotificationSettings = {
