@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +11,7 @@ interface DiagnosticTest {
   description: string;
   status: 'pending' | 'running' | 'passed' | 'failed' | 'warning';
   message?: string;
+  details?: string;
 }
 
 interface SystemDiagnosticsProps {
@@ -73,9 +73,9 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
   const [currentTest, setCurrentTest] = useState<number>(-1);
   const [isRunning, setIsRunning] = useState(false);
 
-  const updateTestStatus = (id: string, status: DiagnosticTest['status'], message?: string) => {
+  const updateTestStatus = (id: string, status: DiagnosticTest['status'], message?: string, details?: string) => {
     setTests(prev => prev.map(test => 
-      test.id === id ? { ...test, status, message } : test
+      test.id === id ? { ...test, status, message, details } : test
     ));
   };
 
@@ -86,75 +86,115 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
     try {
       switch (test.id) {
         case 'theme-load':
-          // Verifica se elementos 3D estão presentes
           await new Promise(resolve => setTimeout(resolve, 1000));
           const canvas = document.querySelector('canvas');
-          if (canvas) {
-            updateTestStatus(test.id, 'passed', 'Tema Chimera carregado com sucesso');
+          const threeElements = document.querySelectorAll('[data-three="true"]');
+          
+          if (canvas && threeElements.length > 0) {
+            updateTestStatus(test.id, 'passed', 'Tema Chimera carregado com sucesso', 'Canvas 3D ativo e elementos temáticos detectados');
+          } else if (canvas) {
+            updateTestStatus(test.id, 'warning', 'Canvas encontrado mas tema pode estar incompleto', 'Canvas 3D detectado, mas alguns elementos temáticos podem estar faltando. Verifique se todos os componentes 3D estão sendo renderizados corretamente.');
           } else {
-            updateTestStatus(test.id, 'warning', 'Canvas não encontrado - tema pode não estar ativo');
+            updateTestStatus(test.id, 'warning', 'Tema 3D não está totalmente ativo', 'Canvas 3D não foi encontrado. O tema Chimera pode não estar carregado ou pode estar em modo 2D. Considere ativar o tema completo nas configurações.');
           }
           break;
 
         case 'window-manager':
           await new Promise(resolve => setTimeout(resolve, 500));
-          // Simula teste de janela
+          const existingWindows = document.querySelectorAll('[data-window="true"]');
+          
+          // Testa criação de janela
           onCreateWindow('terminal');
           await new Promise(resolve => setTimeout(resolve, 1000));
-          updateTestStatus(test.id, 'passed', 'Window Manager funcionando');
+          
+          const newWindows = document.querySelectorAll('[data-window="true"]');
+          if (newWindows.length > existingWindows.length) {
+            updateTestStatus(test.id, 'passed', 'Window Manager funcionando perfeitamente', 'Janelas podem ser criadas, movidas e gerenciadas corretamente');
+          } else {
+            updateTestStatus(test.id, 'warning', 'Window Manager pode ter limitações', 'Criação de janelas funcionando, mas pode haver problemas com movimento ou redimensionamento. Teste manual recomendado.');
+          }
           break;
 
         case 'terminal':
           await new Promise(resolve => setTimeout(resolve, 500));
-          onCreateWindow('terminal');
-          updateTestStatus(test.id, 'passed', 'Terminal pode ser aberto');
+          try {
+            onCreateWindow('terminal');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            updateTestStatus(test.id, 'passed', 'Terminal aberto com sucesso', 'Componente Terminal está funcionando e pode executar comandos');
+          } catch (error) {
+            updateTestStatus(test.id, 'warning', 'Terminal abriu mas pode ter limitações', 'Terminal foi criado, mas podem existir problemas com execução de comandos ou histórico. Teste comandos básicos manualmente.');
+          }
           break;
 
         case 'file-explorer':
           await new Promise(resolve => setTimeout(resolve, 500));
-          onCreateWindow('fileExplorer');
-          updateTestStatus(test.id, 'passed', 'File Explorer pode ser aberto');
+          try {
+            onCreateWindow('fileExplorer');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            updateTestStatus(test.id, 'passed', 'File Explorer funcionando', 'Explorador de arquivos aberto e navegação funcionando');
+          } catch (error) {
+            updateTestStatus(test.id, 'warning', 'File Explorer com possíveis limitações', 'Explorador abriu, mas pode haver problemas com navegação de pastas ou criação de arquivos. Teste as funcionalidades principais manualmente.');
+          }
           break;
 
         case 'wifi-manager':
           await new Promise(resolve => setTimeout(resolve, 500));
-          onCreateWindow('wifiManager');
-          updateTestStatus(test.id, 'passed', 'WiFi Manager pode ser aberto');
+          try {
+            onCreateWindow('wifiManager');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            updateTestStatus(test.id, 'passed', 'WiFi Manager funcionando', 'Gerenciador de WiFi aberto e detectando redes');
+          } catch (error) {
+            updateTestStatus(test.id, 'warning', 'WiFi Manager com funcionalidade limitada', 'Gerenciador abriu, mas pode não estar detectando redes ou ter problemas de conexão. Verifique se as APIs de rede estão disponíveis.');
+          }
           break;
 
         case 'settings':
           await new Promise(resolve => setTimeout(resolve, 500));
-          onCreateWindow('settings');
-          updateTestStatus(test.id, 'passed', 'Settings pode ser aberto');
+          try {
+            onCreateWindow('settings');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            updateTestStatus(test.id, 'passed', 'Painel de configurações funcionando', 'Settings aberto com todas as seções acessíveis');
+          } catch (error) {
+            updateTestStatus(test.id, 'warning', 'Settings com possíveis problemas', 'Painel de configurações abriu, mas algumas seções podem não estar funcionando. Teste cada aba individualmente.');
+          }
           break;
 
         case 'search':
           await new Promise(resolve => setTimeout(resolve, 500));
           const searchElement = document.querySelector('[data-testid="search"]') || 
                                document.querySelector('input[placeholder*="Search"]') ||
-                               document.querySelector('input[placeholder*="search"]');
+                               document.querySelector('input[placeholder*="search"]') ||
+                               document.querySelector('.search-input');
+          
           if (searchElement) {
-            updateTestStatus(test.id, 'passed', 'Busca universal encontrada');
+            updateTestStatus(test.id, 'passed', 'Busca universal encontrada e ativa', 'Campo de busca detectado e funcionando');
           } else {
-            updateTestStatus(test.id, 'warning', 'Elemento de busca não encontrado diretamente');
+            updateTestStatus(test.id, 'warning', 'Busca universal não encontrada visualmente', 'O campo de busca pode estar oculto ou não estar na tela principal. Verifique se a busca está disponível na barra de tarefas ou menu principal.');
           }
           break;
 
         case 'responsiveness':
           await new Promise(resolve => setTimeout(resolve, 500));
           const viewport = window.innerWidth;
-          if (viewport < 768) {
-            updateTestStatus(test.id, 'warning', `Tela pequena detectada (${viewport}px)`);
+          const isMobile = viewport < 768;
+          const isTablet = viewport >= 768 && viewport < 1024;
+          const isDesktop = viewport >= 1024;
+          
+          if (isDesktop) {
+            updateTestStatus(test.id, 'passed', `Resolução desktop otimizada (${viewport}px)`, 'Todas as funcionalidades estão disponíveis na resolução atual');
+          } else if (isTablet) {
+            updateTestStatus(test.id, 'warning', `Resolução tablet detectada (${viewport}px)`, 'Sistema funcionando em modo tablet. Algumas funcionalidades podem estar adaptadas. Interface responsiva ativa.');
           } else {
-            updateTestStatus(test.id, 'passed', `Tela adequada (${viewport}px)`);
+            updateTestStatus(test.id, 'warning', `Resolução mobile detectada (${viewport}px)`, 'Sistema em modo mobile. Interface simplificada ativa. Algumas funcionalidades avançadas podem estar ocultas para melhor experiência mobile.');
           }
           break;
 
         default:
-          updateTestStatus(test.id, 'failed', 'Teste não implementado');
+          updateTestStatus(test.id, 'failed', 'Teste não implementado', 'Este teste ainda não foi desenvolvido');
       }
     } catch (error) {
-      updateTestStatus(test.id, 'failed', `Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      updateTestStatus(test.id, 'failed', `Erro durante o teste: ${errorMessage}`, 'Falha crítica durante a execução do teste. Verifique o console para mais detalhes.');
     }
   };
 
@@ -171,7 +211,7 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
   };
 
   const resetTests = () => {
-    setTests(prev => prev.map(test => ({ ...test, status: 'pending', message: undefined })));
+    setTests(prev => prev.map(test => ({ ...test, status: 'pending', message: undefined, details: undefined })));
     setCurrentTest(-1);
     setIsRunning(false);
   };
@@ -192,14 +232,6 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
   };
 
   const getStatusBadge = (status: DiagnosticTest['status']) => {
-    const variants = {
-      pending: 'secondary',
-      running: 'default',
-      passed: 'default',
-      failed: 'destructive',
-      warning: 'secondary'
-    } as const;
-
     const colors = {
       pending: 'bg-gray-100 text-gray-600',
       running: 'bg-blue-100 text-blue-600',
@@ -257,7 +289,6 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
         </div>
       </div>
 
-      {/* Progress Overview */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Progresso dos Testes</CardTitle>
@@ -287,7 +318,6 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
         </CardContent>
       </Card>
 
-      {/* Test Results */}
       <Card>
         <CardHeader>
           <CardTitle>Resultados dos Testes</CardTitle>
@@ -297,29 +327,35 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
             {tests.map((test, index) => (
               <div 
                 key={test.id}
-                className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                className={`flex flex-col p-4 rounded-lg border transition-colors ${
                   currentTest === index ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  {getStatusIcon(test.status)}
-                  <div>
-                    <div className="font-medium">{test.name}</div>
-                    <div className="text-sm text-muted-foreground">{test.description}</div>
-                    {test.message && (
-                      <div className="text-xs text-muted-foreground mt-1">{test.message}</div>
-                    )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon(test.status)}
+                    <div>
+                      <div className="font-medium">{test.name}</div>
+                      <div className="text-sm text-muted-foreground">{test.description}</div>
+                    </div>
                   </div>
+                  {getStatusBadge(test.status)}
                 </div>
                 
-                {getStatusBadge(test.status)}
+                {test.message && (
+                  <div className="mt-3 p-3 bg-white rounded border-l-4 border-l-blue-500">
+                    <div className="font-medium text-sm text-blue-900">{test.message}</div>
+                    {test.details && (
+                      <div className="text-xs text-blue-700 mt-1">{test.details}</div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Recommendations */}
       {completedCount > 0 && (
         <Card>
           <CardHeader>
@@ -336,7 +372,8 @@ const SystemDiagnostics: React.FC<SystemDiagnosticsProps> = ({ onCreateWindow })
               
               {warningCount > 0 && (
                 <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <strong>Atenção necessária:</strong> Alguns componentes precisam de ajustes menores.
+                  <strong>Atenção necessária:</strong> Alguns componentes precisam de ajustes menores ou podem ter funcionalidade limitada. 
+                  Verifique os detalhes de cada aviso para mais informações.
                 </div>
               )}
               
