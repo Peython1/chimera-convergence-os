@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import { motion, useDragControls } from 'framer-motion';
 import { WindowData } from './types';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import SystemDiagnostics from '../diagnostics/SystemDiagnostics';
 
 interface WindowProps {
   data: WindowData;
@@ -57,18 +57,23 @@ const Window: React.FC<WindowProps> = ({
     document.addEventListener('mouseup', handleMouseUp);
   };
   
-  let content;
-  if (data.content === 'systemDiagnostics') {
-    content = <SystemDiagnostics onCreateWindow={(type) => console.log('Create window:', type)} />;
-  } else if (React.isValidElement(data.content)) {
-    content = data.content;
-  } else {
-    content = data.content;
-  }
+  // Safely render content - always render React elements directly
+  const renderContent = () => {
+    if (React.isValidElement(data.content)) {
+      return data.content;
+    }
+    
+    // For string content, render as text
+    if (typeof data.content === 'string') {
+      return <div className="p-4 text-center text-gray-500">Content: {data.content}</div>;
+    }
+    
+    return <div className="p-4 text-center text-gray-500">Unknown content type</div>;
+  };
   
   return (
     <motion.div
-      className={`absolute rounded-lg overflow-hidden shadow-xl border border-gray-200 flex flex-col ${
+      className={`absolute rounded-lg overflow-hidden shadow-xl border border-gray-200 flex flex-col bg-white ${
         data.isActive ? 'z-10' : 'z-0'
       }`}
       style={{
@@ -95,12 +100,11 @@ const Window: React.FC<WindowProps> = ({
     >
       {/* Title bar */}
       <div 
-        className={`h-10 flex items-center justify-between px-3 ${
+        className={`h-10 flex items-center justify-between px-3 border-b ${
           data.isActive ? 'bg-white' : 'bg-gray-100'
         }`}
         onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
           if (e.button === 0 && !data.isMaximized) {
-            // Fix type issue by using the correct event type
             dragControls.start(e as unknown as React.PointerEvent<Element>);
           }
         }}
@@ -141,13 +145,13 @@ const Window: React.FC<WindowProps> = ({
       
       {/* Content area */}
       <div className="flex-1 bg-white overflow-hidden">
-        {content}
+        {renderContent()}
       </div>
       
       {/* Resize handle */}
       {!data.isMaximized && (
         <div 
-          className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize"
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize bg-gray-300 hover:bg-gray-400"
           onMouseDown={handleResizeMouseDown}
         />
       )}

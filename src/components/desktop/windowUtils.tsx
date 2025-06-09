@@ -8,6 +8,9 @@ import SettingsPanel from '../settings/SettingsPanel';
 import AppStore from '../store/AppStore';
 import Browser from '../browser/Browser';
 import NotificationCenter from '../notifications/NotificationCenter';
+import Terminal from '../system/Terminal';
+import SystemMonitor from '../system/SystemMonitor';
+import WifiManager from '../wifi/WifiManager';
 
 export const generateWindow = (windowType: string, existingWindows: WindowData[]): WindowData | null => {
   const nextZIndex = existingWindows.length > 0
@@ -42,7 +45,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'Terminal',
-      content: 'terminal',
+      content: <Terminal />,
       position: { x: 75, y: 75 },
       size: { width: 600, height: 400 },
       isMinimized: false,
@@ -54,7 +57,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'System Monitor',
-      content: 'systemMonitor',
+      content: <SystemMonitor />,
       position: { x: 100, y: 100 },
       size: { width: 700, height: 500 },
       isMinimized: false,
@@ -102,7 +105,7 @@ export const generateWindow = (windowType: string, existingWindows: WindowData[]
     return {
       id: generateId(),
       title: 'WiFi Manager',
-      content: 'wifiManager',
+      content: <WifiManager />,
       position: { x: 200, y: 200 },
       size: { width: 600, height: 500 },
       isMinimized: false,
